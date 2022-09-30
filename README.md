@@ -18,5 +18,15 @@ Use `cp .env.example .env` first.
 
 We use [gin][gin] for routing.
 
+### Swagger
+
+This project uses [swaggo][swaggo] to generate openapi specifications.
+First install the `swag` cli using `go install github.com/swaggo/swag/cmd/swag@latest`.
+Now you can run `swag init` to update `/docs`.
+The server will serve the specification on `/swagger/index.html` (just `/swagger` won't work).
+
+To add a route use the [declarative comments format](https://github.com/swaggo/swag/blob/master/README.md#declarative-comments-format).
+
 [golang]: https://go.dev/
 [gin]: https://github.com/gin-gonic/gin/
+[swaggo]: https://github.com/swaggo/

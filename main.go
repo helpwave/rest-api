@@ -3,21 +3,32 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
-	"net/http"
+	"rest-api/docs"
+	"rest-api/routes"
 )
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	v1 := router.Group("/v1")
 
 	// this will expose GET /v1/healthz
-	v1.GET("/healthz", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"server": "ok",
-		})
-	})
+	v1.GET("/healthz", routes.HealthzRoute)
 	return router
+}
+
+func setSwaggerInfo() {
+	docs.SwaggerInfo.Title = "helpwave rest-api"
+	docs.SwaggerInfo.Description = "helpwave rest-api backend"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "helpwave.de"
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Schemes = []string{"https"}
 }
 
 func main() {
@@ -25,6 +36,8 @@ func main() {
 	if dotenvErr != nil {
 		log.Fatalln("Error loading .env file: ", dotenvErr)
 	}
+
+	setSwaggerInfo()
 
 	router := setupRouter()
 
