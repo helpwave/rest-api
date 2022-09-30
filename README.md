@@ -11,8 +11,8 @@ You can build the project using `go build rest-api` and run it using `go run res
 
 ## Environment
 
-The following environment variables can be used to customize the server:
- * `PORT` - The port on which the api will listen on (default: 3000)
+A `.env.example` file is provided and can be used to customize the server.
+Use `cp .env.example .env` first.
 
 ### Gin
 

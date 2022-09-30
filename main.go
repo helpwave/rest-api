@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 )
@@ -20,10 +21,15 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	dotenvErr := godotenv.Load()
+	if dotenvErr != nil {
+		log.Fatalln("Error loading .env file: ", dotenvErr)
+	}
+
 	router := setupRouter()
 
-	err := router.Run(":" + GetEnvOr("PORT", "3000"))
-	if err != nil {
+	serverErr := router.Run(":" + GetEnvOr("PORT", "3000"))
+	if serverErr != nil {
 		log.Fatalln("Could not start server; See logs why.")
 	}
 }
