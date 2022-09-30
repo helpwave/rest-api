@@ -1,0 +1,30 @@
+definitions:
+  routes.HealthzResponse:
+    properties:
+      server:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /healthz:
+    get:
+      description: can be used for health checks
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.HealthzResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/routes.HealthzResponse'
+      summary: health check route
+  /user:
+    get:
+      responses: {}
+      summary: Get all user
+    put:
+      responses: {}
+      summary: Create a user
+swagger: "2.0"

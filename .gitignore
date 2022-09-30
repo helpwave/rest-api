@@ -95,6 +95,7 @@ doc/api/
 
 # dotenv environment variables file
 .env*
+!.env.example
 
 # Avoid committing generated Javascript files:
 *.dart.js
@@ -1566,3 +1567,6 @@ hs_err_pid*
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,emacs,dart,flutter,android,androidstudio,intellij,intellij+all,intellij+iml,pycharm,pycharm+all,pycharm+iml,go,goland,goland+iml,goland+all,visualstudiocode,react,reactnative,python,pythonvanilla,xcode,xcodeinjection,node,nativescript,cordova,apachecordova,ionic3,vue,vuejs
+
+# Go build output
+rest-api

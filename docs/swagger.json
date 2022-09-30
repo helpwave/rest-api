@@ -1,0 +1,48 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/healthz": {
+            "get": {
+                "description": "can be used for health checks",
+                "summary": "health check route",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HealthzResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HealthzResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "summary": "Get all user",
+                "responses": {}
+            },
+            "put": {
+                "summary": "Create a user",
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "routes.HealthzResponse": {
+            "type": "object",
+            "properties": {
+                "server": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
