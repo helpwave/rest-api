@@ -26,8 +26,8 @@ func setSwaggerInfo() {
 	docs.SwaggerInfo.Title = "helpwave rest-api"
 	docs.SwaggerInfo.Description = "helpwave rest-api backend"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "helpwave.de"
-	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Host = "main.helpwave.de"
+	docs.SwaggerInfo.BasePath = "/v1"
 	docs.SwaggerInfo.Schemes = []string{"https"}
 }
 
@@ -36,6 +36,8 @@ func main() {
 	if dotenvErr != nil {
 		log.Fatalln("Error loading .env file: ", dotenvErr)
 	}
+
+	gin.SetMode(GetEnvOr("GIN_MODE", "debug"))
 
 	setSwaggerInfo()
 
