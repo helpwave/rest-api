@@ -20,4 +20,11 @@ paths:
           schema:
             $ref: '#/definitions/routes.HealthzResponse'
       summary: health check route
+  /user:
+    get:
+      responses: {}
+      summary: Get all user
+    put:
+      responses: {}
+      summary: Create a user
 swagger: "2.0"

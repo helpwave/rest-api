@@ -27,6 +27,26 @@ The server will serve the specification on `/swagger/index.html` (just `/swagger
 
 To add a route use the [declarative comments format](https://github.com/swaggo/swag/blob/master/README.md#declarative-comments-format).
 
+### GORM
+
+To connect to postgres we use [GORM][GORM].
+
+Keep in mind the following [conventions](https://gorm.io/docs/models.html#Conventions):
+> GORM prefers convention to configuration,
+> by default, GORM uses ID as primary key, pluralize struct name to
+> snake_cases as table name, snake_case as column name, and uses CreatedAt,
+> UpdatedAt to track creating/updating time
+
+### migrate
+
+Install the [`migrate`][migrate] cli using `go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest`.
+
+New migrations can be generated using `migrate create -ext sql -dir db/migrations -seq <title>`.
+
+Users with `bash` installed can use `./migrate.sh up` to run a migration against the db specified in `.env`.
+
 [golang]: https://go.dev/
 [gin]: https://github.com/gin-gonic/gin/
 [swaggo]: https://github.com/swaggo/
+[GORM]: https://gorm.io/
+[migrate]: https://github.com/golang-migrate/migrate/

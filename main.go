@@ -7,6 +7,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"rest-api/docs"
+	"rest-api/models"
 	"rest-api/routes"
 )
 
@@ -19,6 +20,12 @@ func setupRouter() *gin.Engine {
 
 	// this will expose GET /v1/healthz
 	v1.GET("/healthz", routes.HealthzRoute)
+
+	// CR routes to demonstrate db connections,
+	// we should get rid of them swiftly once development has started
+	v1.PUT("/user", routes.CreateUserRoute)
+	v1.GET("/user", routes.GetUsersRoute)
+
 	return router
 }
 
@@ -36,6 +43,14 @@ func main() {
 	if dotenvErr != nil {
 		log.Fatalln("Error loading .env file: ", dotenvErr)
 	}
+
+	models.SetupDatabase(
+		GetEnvOr("DB_HOST", "localhost"),
+		GetEnvOr("DB_USER", "postgres"),
+		GetEnvOr("DB_PASSWORD", "postgres"),
+		GetEnvOr("DB_DATABASE", "postgres"),
+		GetEnvOr("DB_PORT", "5432"),
+	)
 
 	gin.SetMode(GetEnvOr("GIN_MODE", "debug"))
 
