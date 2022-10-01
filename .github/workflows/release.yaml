@@ -1,0 +1,51 @@
+name: Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Name of the release'
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  GO_VERSION: '1.19'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/setup-go@v3
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - uses: actions/checkout@v3
+
+      - name: Cache build dependencies
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/_go.sum') }}
+      
+      - name: Build
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: go build -o bin/helpwave -v
+      
+      - uses: actions/upload-artifact@v3
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        with:
+          name: helpwave
+          path: bin/helpwave
+          
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        with:
+          files: |
+            bin/helpwave
+          tag_name: ${{ github.event.inputs.version }}
