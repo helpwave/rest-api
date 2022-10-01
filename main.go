@@ -46,9 +46,9 @@ func main() {
 
 	models.SetupDatabase(
 		GetEnvOr("DB_HOST", "localhost"),
-		GetEnvOr("DB_USER", "postgres"),
-		GetEnvOr("DB_PASSWORD", "postgres"),
-		GetEnvOr("DB_DATABASE", "postgres"),
+		GetEnvOr("POSTGRES_USER", "postgres"),
+		GetEnvOr("POSTGRES_PASSWORD", "postgres"),
+		GetEnvOr("POSTGRES_DB", "postgres"),
 		GetEnvOr("DB_PORT", "5432"),
 	)
 
