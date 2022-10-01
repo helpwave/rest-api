@@ -1570,3 +1570,5 @@ hs_err_pid*
 
 # Go build output
 rest-api
+
+data/
