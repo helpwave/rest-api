@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS emergencies (
     FOREIGN KEY (emergency_room_id)
         REFERENCES emergency_rooms(id)
 );
+
+CREATE TABLE IF NOT EXISTS emergencies_need_departments (
+    emergency_id UUID NOT NULL,
+    department_id UUID NOT NULL,
+    FOREIGN KEY (emergency_id)
+        REFERENCES emergencies(id),
+    FOREIGN KEY (department_id)
+        REFERENCES departments(id)
+);
