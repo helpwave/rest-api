@@ -12,3 +12,11 @@ CREATE TABLE IF NOT EXISTS departments (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     name text NOT NULL UNIQUE
 );
+CREATE TABLE IF NOT EXISTS rooms_have_departments (
+    emergency_room_id UUID NOT NULL,
+    department_id UUID NOT NULL,
+    FOREIGN KEY (emergency_room_id)
+        REFERENCES emergency_rooms(id),
+    FOREIGN KEY (department_id)
+        REFERENCES departments(id)
+);
