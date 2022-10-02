@@ -27,5 +27,8 @@ CREATE TABLE IF NOT EXISTS rooms_have_departments (
 CREATE TABLE IF NOT EXISTS emergencies (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     start_loc point,
-    time_stamp timestamp NOT NULL DEFAULT NOW()
+    time_stamp timestamp NOT NULL DEFAULT NOW(),
+    emergency_room_id UUID,
+    FOREIGN KEY (emergency_room_id)
+        REFERENCES emergency_rooms(id)
 );
