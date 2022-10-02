@@ -8,3 +8,7 @@ CREATE TABLE IF NOT EXISTS emergency_rooms (
     utilization smallint NOT NULL DEFAULT 1,
     CHECK (utilization >= 1 AND utilization <=5)
 );
+CREATE TABLE IF NOT EXISTS departments (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name text NOT NULL UNIQUE
+);
