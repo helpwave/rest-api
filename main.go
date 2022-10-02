@@ -21,11 +21,6 @@ func setupRouter() *gin.Engine {
 	// this will expose GET /v1/healthz
 	v1.GET("/healthz", routes.HealthzRoute)
 
-	// CR routes to demonstrate db connections,
-	// we should get rid of them swiftly once development has started
-	v1.PUT("/user", routes.CreateUserRoute)
-	v1.GET("/user", routes.GetUsersRoute)
-
 	return router
 }
 

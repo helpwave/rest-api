@@ -35,16 +35,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/user": {
-            "get": {
-                "summary": "Get all user",
-                "responses": {}
-            },
-            "put": {
-                "summary": "Create a user",
-                "responses": {}
-            }
         }
     },
     "definitions": {
