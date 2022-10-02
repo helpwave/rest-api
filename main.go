@@ -45,11 +45,11 @@ func main() {
 	}
 
 	models.SetupDatabase(
-		GetEnvOr("DB_HOST", "localhost"),
-		GetEnvOr("DB_USER", "postgres"),
-		GetEnvOr("DB_PASSWORD", "postgres"),
-		GetEnvOr("DB_DATABASE", "postgres"),
-		GetEnvOr("DB_PORT", "5432"),
+		GetEnvOr("POSTGRES_HOST", "localhost"),
+		GetEnvOr("POSTGRES_USER", "postgres"),
+		GetEnvOr("POSTGRES_PASSWORD", "postgres"),
+		GetEnvOr("POSTGRES_DB", "postgres"),
+		GetEnvOr("POSTGRES_PORT", "5432"),
 	)
 
 	gin.SetMode(GetEnvOr("GIN_MODE", "debug"))
