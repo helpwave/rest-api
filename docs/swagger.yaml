@@ -1,12 +1,231 @@
 definitions:
+  models.Department:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      neededInEmergencies:
+        items:
+          $ref: '#/definitions/models.Emergency'
+        type: array
+      rooms:
+        items:
+          $ref: '#/definitions/models.EmergencyRoom'
+        type: array
+    type: object
+  models.Emergency:
+    properties:
+      emergencyRoom:
+        $ref: '#/definitions/models.EmergencyRoom'
+      emergencyRoomID:
+        description: explicitly set the FK to NULL, else PG is confused
+        type: string
+      id:
+        type: string
+      neededDepartments:
+        items:
+          $ref: '#/definitions/models.Department'
+        type: array
+      startLoc:
+        $ref: '#/definitions/models.Point'
+      timeStamp:
+        type: string
+    type: object
+  models.EmergencyRoom:
+    properties:
+      departments:
+        items:
+          $ref: '#/definitions/models.Department'
+        type: array
+      displayableAddress:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/models.Point'
+      name:
+        type: string
+      open:
+        type: boolean
+      utilization:
+        type: integer
+    type: object
+  models.Point:
+    properties:
+      x:
+        type: number
+    type: object
+  routes.GetMultipleERsResponse:
+    properties:
+      lastPage:
+        type: boolean
+      numPages:
+        type: integer
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      totalSite:
+        type: integer
+    type: object
+  routes.GetSingleERResponse:
+    type: object
+  routes.HTTPError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  routes.HTTPErrorResponse:
+    properties:
+      error:
+        $ref: '#/definitions/routes.HTTPError'
+    type: object
   routes.HealthzResponse:
     properties:
       server:
         type: string
     type: object
+  routes.PutERRequest:
+    properties:
+      departments:
+        items:
+          $ref: '#/definitions/models.Department'
+        type: array
+      displayableAddress:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/models.Point'
+      name:
+        type: string
+      open:
+        type: boolean
+      utilization:
+        type: integer
+    type: object
+  routes.PutERResponse:
+    type: object
+  routes.StatusResponse:
+    properties:
+      ok:
+        type: boolean
+    type: object
 info:
   contact: {}
 paths:
+  /er:
+    get:
+      parameters:
+      - description: 0-indexed page number, 0 is assumed when omitted
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetMultipleERsResponse'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: get emergency rooms
+      tags:
+      - emergency-rooms
+  /er/{id}:
+    delete:
+      parameters:
+      - description: Emergency Room's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.StatusResponse'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: delete an emergency room by id
+      tags:
+      - emergency-rooms
+    get:
+      parameters:
+      - description: Emergency Room's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetSingleERResponse'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: get an emergency room by id
+      tags:
+      - emergency-rooms
+    patch:
+      parameters:
+      - description: Emergency Room's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetSingleERResponse'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: update an emergency room by id
+      tags:
+      - emergency-rooms
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ER to add
+        in: body
+        name: emergency-room
+        required: true
+        schema:
+          $ref: '#/definitions/routes.PutERRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.PutERResponse'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: create a new emergency room
+      tags:
+      - emergency-rooms
   /healthz:
     get:
       description: can be used for health checks

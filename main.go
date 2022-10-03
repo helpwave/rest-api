@@ -21,6 +21,12 @@ func setupRouter() *gin.Engine {
 	// this will expose GET /v1/healthz
 	v1.GET("/healthz", routes.HealthzRoute)
 
+	v1.POST("/er", routes.CreateEmergencyRoom)
+	v1.GET("/er", routes.GetEmergencyRooms)
+	v1.GET("/er/{id}", routes.GetEmergencyRoomById)
+	v1.PATCH("/er/{id}", routes.UpdateEmergencyRoom)
+	v1.DELETE("/er/{id}", routes.DeleteEmergencyRoom)
+
 	return router
 }
 
