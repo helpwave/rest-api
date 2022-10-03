@@ -1,42 +1,40 @@
 definitions:
-  models.Department:
+  models.DepartmentBase:
     properties:
       id:
         type: string
       name:
         type: string
-      neededInEmergencies:
-        items:
-          $ref: '#/definitions/models.Emergency'
-        type: array
-      rooms:
-        items:
-          $ref: '#/definitions/models.EmergencyRoom'
-        type: array
     type: object
-  models.Emergency:
+  models.Point:
     properties:
-      emergencyRoom:
-        $ref: '#/definitions/models.EmergencyRoom'
-      emergencyRoomID:
-        description: explicitly set the FK to NULL, else PG is confused
-        type: string
-      id:
-        type: string
-      neededDepartments:
-        items:
-          $ref: '#/definitions/models.Department'
-        type: array
-      startLoc:
-        $ref: '#/definitions/models.Point'
-      timeStamp:
-        type: string
+      lat:
+        type: number
+      long:
+        type: number
     type: object
-  models.EmergencyRoom:
+  routes.GetMultipleERsResponse:
+    properties:
+      emergencyRooms:
+        items:
+          $ref: '#/definitions/routes.GetSingleERResponse'
+        type: array
+      lastPage:
+        type: boolean
+      numPages:
+        type: integer
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      totalSite:
+        type: integer
+    type: object
+  routes.GetSingleERResponse:
     properties:
       departments:
         items:
-          $ref: '#/definitions/models.Department'
+          $ref: '#/definitions/models.DepartmentBase'
         type: array
       displayableAddress:
         type: string
@@ -50,26 +48,6 @@ definitions:
         type: boolean
       utilization:
         type: integer
-    type: object
-  models.Point:
-    properties:
-      x:
-        type: number
-    type: object
-  routes.GetMultipleERsResponse:
-    properties:
-      lastPage:
-        type: boolean
-      numPages:
-        type: integer
-      page:
-        type: integer
-      pageSize:
-        type: integer
-      totalSite:
-        type: integer
-    type: object
-  routes.GetSingleERResponse:
     type: object
   routes.HTTPError:
     properties:
@@ -92,11 +70,9 @@ definitions:
     properties:
       departments:
         items:
-          $ref: '#/definitions/models.Department'
+          $ref: '#/definitions/models.DepartmentBase'
         type: array
       displayableAddress:
-        type: string
-      id:
         type: string
       location:
         $ref: '#/definitions/models.Point'
@@ -106,8 +82,6 @@ definitions:
         type: boolean
       utilization:
         type: integer
-    type: object
-  routes.PutERResponse:
     type: object
   routes.StatusResponse:
     properties:
@@ -202,7 +176,7 @@ paths:
       summary: update an emergency room by id
       tags:
       - emergency-rooms
-    post:
+    put:
       consumes:
       - application/json
       parameters:
@@ -218,7 +192,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/routes.PutERResponse'
+            $ref: '#/definitions/routes.GetSingleERResponse'
         "501":
           description: Not Implemented
           schema:

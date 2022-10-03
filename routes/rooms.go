@@ -7,29 +7,9 @@ import (
 	"rest-api/models"
 )
 
-type PutERRequest struct {
-	models.EmergencyRoom // TODO
-}
-
-type PutERResponse struct {
-	// TODO
-}
-
-// CreateEmergencyRoom godoc
-// @Summary     create a new emergency room
-// @Tags 		emergency-rooms
-// @Accept	 	json
-// @Produce 	json
-// @Param		emergency-room 	body 		PutERRequest		true	"ER to add"
-// @Success     200  			{object} 	PutERResponse
-// @Failure     501  			{object}	HTTPErrorResponse
-// @Router      /er/{id} 		[post]
-func CreateEmergencyRoom(ctx *gin.Context) {
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
-}
-
 type GetSingleERResponse struct {
-	// TODO
+	models.EmergencyRoom
+	Departments []models.DepartmentBase
 }
 
 // GetEmergencyRoomById godoc
@@ -42,6 +22,24 @@ type GetSingleERResponse struct {
 // @Router      /er/{id} 	[get]
 func GetEmergencyRoomById(ctx *gin.Context) {
 	_ = ctx.Param("id")
+	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+}
+
+type PutERRequest struct {
+	models.EmergencyRoomBase
+	Departments []models.DepartmentBase
+}
+
+// CreateEmergencyRoom godoc
+// @Summary     create a new emergency room
+// @Tags 		emergency-rooms
+// @Accept	 	json
+// @Produce 	json
+// @Param		emergency-room 	body 		PutERRequest		true	"ER to add"
+// @Success     200  			{object} 	GetSingleERResponse
+// @Failure     501  			{object}	HTTPErrorResponse
+// @Router      /er/{id} 		[put]
+func CreateEmergencyRoom(ctx *gin.Context) {
 	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
 }
 
@@ -73,7 +71,7 @@ func DeleteEmergencyRoom(ctx *gin.Context) {
 
 type GetMultipleERsResponse struct {
 	PaginatedResponse
-	// TODO
+	EmergencyRooms []GetSingleERResponse
 }
 
 // GetEmergencyRooms godoc

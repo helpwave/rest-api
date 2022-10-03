@@ -82,7 +82,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
+            "put": {
                 "consumes": [
                     "application/json"
                 ],
@@ -108,7 +108,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/routes.PutERResponse"
+                            "$ref": "#/definitions/routes.GetSingleERResponse"
                         }
                     },
                     "501": {
@@ -206,7 +206,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Department": {
+        "models.DepartmentBase": {
             "type": "object",
             "properties": {
                 "id": {
@@ -214,55 +214,53 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                },
-                "neededInEmergencies": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Emergency"
-                    }
-                },
-                "rooms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.EmergencyRoom"
-                    }
                 }
             }
         },
-        "models.Emergency": {
+        "models.Point": {
             "type": "object",
             "properties": {
-                "emergencyRoom": {
-                    "$ref": "#/definitions/models.EmergencyRoom"
+                "lat": {
+                    "type": "number"
                 },
-                "emergencyRoomID": {
-                    "description": "explicitly set the FK to NULL, else PG is confused",
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "neededDepartments": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Department"
-                    }
-                },
-                "startLoc": {
-                    "$ref": "#/definitions/models.Point"
-                },
-                "timeStamp": {
-                    "type": "string"
+                "long": {
+                    "type": "number"
                 }
             }
         },
-        "models.EmergencyRoom": {
+        "routes.GetMultipleERsResponse": {
+            "type": "object",
+            "properties": {
+                "emergencyRooms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/routes.GetSingleERResponse"
+                    }
+                },
+                "lastPage": {
+                    "type": "boolean"
+                },
+                "numPages": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalSite": {
+                    "type": "integer"
+                }
+            }
+        },
+        "routes.GetSingleERResponse": {
             "type": "object",
             "properties": {
                 "departments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Department"
+                        "$ref": "#/definitions/models.DepartmentBase"
                     }
                 },
                 "displayableAddress": {
@@ -284,37 +282,6 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
-        },
-        "models.Point": {
-            "type": "object",
-            "properties": {
-                "x": {
-                    "type": "number"
-                }
-            }
-        },
-        "routes.GetMultipleERsResponse": {
-            "type": "object",
-            "properties": {
-                "lastPage": {
-                    "type": "boolean"
-                },
-                "numPages": {
-                    "type": "integer"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                },
-                "totalSite": {
-                    "type": "integer"
-                }
-            }
-        },
-        "routes.GetSingleERResponse": {
-            "type": "object"
         },
         "routes.HTTPError": {
             "type": "object",
@@ -349,13 +316,10 @@ const docTemplate = `{
                 "departments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Department"
+                        "$ref": "#/definitions/models.DepartmentBase"
                     }
                 },
                 "displayableAddress": {
-                    "type": "string"
-                },
-                "id": {
                     "type": "string"
                 },
                 "location": {
@@ -371,9 +335,6 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
-        },
-        "routes.PutERResponse": {
-            "type": "object"
         },
         "routes.StatusResponse": {
             "type": "object",
