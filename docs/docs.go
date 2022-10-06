@@ -16,6 +16,174 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/er": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "get emergency rooms",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "0-indexed page number, 0 is assumed when omitted",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetMultipleERsResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/er/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "get an emergency room by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Emergency Room's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleERResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "create a new emergency room",
+                "parameters": [
+                    {
+                        "description": "ER to add",
+                        "name": "emergency-room",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.PutERRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleERResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "delete an emergency room by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Emergency Room's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.StatusResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "update an emergency room by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Emergency Room's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleERResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/healthz": {
             "get": {
                 "description": "can be used for health checks",
@@ -38,11 +206,141 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.DepartmentBase": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Point": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "long": {
+                    "type": "number"
+                }
+            }
+        },
+        "routes.GetMultipleERsResponse": {
+            "type": "object",
+            "properties": {
+                "emergencyRooms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/routes.GetSingleERResponse"
+                    }
+                },
+                "lastPage": {
+                    "type": "boolean"
+                },
+                "numPages": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalSite": {
+                    "type": "integer"
+                }
+            }
+        },
+        "routes.GetSingleERResponse": {
+            "type": "object",
+            "properties": {
+                "departments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DepartmentBase"
+                    }
+                },
+                "displayableAddress": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/models.Point"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "open": {
+                    "type": "boolean"
+                },
+                "utilization": {
+                    "type": "integer"
+                }
+            }
+        },
+        "routes.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "routes.HTTPErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/routes.HTTPError"
+                }
+            }
+        },
         "routes.HealthzResponse": {
             "type": "object",
             "properties": {
                 "server": {
                     "type": "string"
+                }
+            }
+        },
+        "routes.PutERRequest": {
+            "type": "object",
+            "properties": {
+                "departments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DepartmentBase"
+                    }
+                },
+                "displayableAddress": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/models.Point"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "open": {
+                    "type": "boolean"
+                },
+                "utilization": {
+                    "type": "integer"
+                }
+            }
+        },
+        "routes.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean"
                 }
             }
         }
