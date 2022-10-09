@@ -5,54 +5,21 @@ import (
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"go.opentelemetry.io/otel/trace"
-	"os"
 	"rest-api/docs"
+	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/routes"
 )
 
-func setupLogging() {
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	if GetEnvOr("GIN_MODE", "development") != "release" {
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
-	}
-	log.Logger = log.With().Caller().Logger()
-	level, err := zerolog.ParseLevel(GetEnvOr("LOG_LEVEL", "info"))
-	if err != nil {
-		log.Fatal().Err(err).Msg("could not parse LOG_LEVEL")
-	}
-	log.Logger = log.Level(level)
-	log.Info().Msg("Logging is set up")
-}
-
-func ginLogger(ctx *gin.Context, _ zerolog.Logger) zerolog.Logger {
-	l := log.Logger
-
-	// log otel context in case we ever use it
-	otelContext := trace.SpanFromContext(ctx.Request.Context()).SpanContext()
-	if otelContext.IsValid() {
-		l.With().
-			Str("trace_id", otelContext.TraceID().String()).
-			Str("span_id", otelContext.SpanID().String()).
-			Logger()
-	}
-
-	return l.With().
-		Str("request_id", requestid.Get(ctx)).
-		Logger()
-}
-
 func setupRouter() *gin.Engine {
-	router := gin.New()
-	router.Use(gin.Recovery())
-	router.Use(requestid.New())
+	router := gin.New()         // basic gin router
+	router.Use(gin.Recovery())  // recover form panics and answer with 500
+	router.Use(requestid.New()) // generate a unique id for every request (for logging)
 
-	router.Use(logger.SetLogger(logger.WithLogger(ginLogger)))
+	router.Use(logger.SetLogger(logger.WithLogger(logging.GinLogger)))
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -80,7 +47,10 @@ func setSwaggerInfo() {
 }
 
 func main() {
-	setupLogging()
+	logging.SetupLogging(
+		GetEnvOr("GIN_MODE", "development"),
+		GetEnvOr("LOG_LEVEL", "info"),
+	)
 
 	if err := godotenv.Load(); err != nil {
 		log.Fatal().Err(err).Msg("Error loading .env file: ")
