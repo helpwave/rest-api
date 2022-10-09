@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"fmt"
+	"github.com/jackc/pgconn"
+	"github.com/jackc/pgerrcode"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -31,6 +33,12 @@ func SetupDatabase(host, user, password, database, port string) {
 // IsOurFault returns true when a gORM error is caused by invalid backend configuration
 // e.g. a disconnected database
 func IsOurFault(gormError error) bool {
+	// try to cast into PgError
+	var pgErr *pgconn.PgError
+	if errors.As(gormError, &pgErr) {
+		return isOurFaultPgError(pgErr)
+	}
+
 	ours :=
 		errors.Is(gormError, gorm.ErrInvalidTransaction) ||
 			errors.Is(gormError, gorm.ErrNotImplemented) ||
@@ -54,8 +62,25 @@ func IsOurFault(gormError error) bool {
 
 	if !ours && !theirs {
 		log.Println("Error is neither theirs nor ours!!")
-		// TODO pgx-level error handling
+		return true // if we don't know the error, we might have caused it
 	}
 
 	return ours
+}
+
+func isOurFaultPgError(err *pgconn.PgError) bool {
+	code := err.Code
+
+	// common errors that can occur because the backend messed up
+	return pgerrcode.IsConnectionException(code) ||
+		pgerrcode.IsFeatureNotSupported(code) ||
+		pgerrcode.IsInvalidTransactionInitiation(code) ||
+		pgerrcode.IsInvalidSQLStatementName(code) ||
+		pgerrcode.IsSyntaxErrororAccessRuleViolation(code) ||
+		pgerrcode.IsInsufficientResources(code) ||
+		pgerrcode.IsProgramLimitExceeded(code) ||
+		pgerrcode.IsSystemError(code) ||
+		pgerrcode.IsConfigurationFileError(code) ||
+		pgerrcode.IsInternalError(code) ||
+		pgerrcode.IsOperatorIntervention(code)
 }

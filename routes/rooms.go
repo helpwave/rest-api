@@ -76,7 +76,6 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 
 	res := db.Create(&er)
 	if err := res.Error; err != nil {
-		log.Println("db error", err)
 		HandleDBError(ctx, err)
 		return
 	}

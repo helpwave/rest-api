@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"rest-api/models"
 )
@@ -35,6 +36,7 @@ func SendOk(ctx *gin.Context) {
 }
 
 func HandleDBError(ctx *gin.Context, err error) {
+	log.Println("db error", err)
 	status := http.StatusBadRequest
 	if models.IsOurFault(err) {
 		status = http.StatusInternalServerError
