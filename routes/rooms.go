@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"rest-api/models"
+	"rest-api/util"
 )
 
 type GetSingleERResponse struct {
@@ -52,7 +53,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
-	log.Println("req body: ", body)
+	log.Println("req body:", util.Formatted(body))
 
 	//
 	// convert department UUIDs into Departments
@@ -69,7 +70,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 		EmergencyRoomBase: body.EmergencyRoomBase,
 		Departments:       deps,
 	}
-	log.Println("model", er)
+	log.Println("model", util.Formatted(er))
 
 	db := models.DB
 	db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already

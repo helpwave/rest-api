@@ -9,6 +9,7 @@ import (
 	"rest-api/docs"
 	"rest-api/models"
 	"rest-api/routes"
+	"rest-api/util"
 )
 
 func setupRouter() *gin.Engine {
@@ -46,20 +47,20 @@ func main() {
 	}
 
 	models.SetupDatabase(
-		GetEnvOr("POSTGRES_HOST", "localhost"),
-		GetEnvOr("POSTGRES_USER", "postgres"),
-		GetEnvOr("POSTGRES_PASSWORD", "postgres"),
-		GetEnvOr("POSTGRES_DB", "postgres"),
-		GetEnvOr("POSTGRES_PORT", "5432"),
+		util.GetEnvOr("POSTGRES_HOST", "localhost"),
+		util.GetEnvOr("POSTGRES_USER", "postgres"),
+		util.GetEnvOr("POSTGRES_PASSWORD", "postgres"),
+		util.GetEnvOr("POSTGRES_DB", "postgres"),
+		util.GetEnvOr("POSTGRES_PORT", "5432"),
 	)
 
-	gin.SetMode(GetEnvOr("GIN_MODE", "debug"))
+	gin.SetMode(util.GetEnvOr("GIN_MODE", "debug"))
 
 	setSwaggerInfo()
 
 	router := setupRouter()
 
-	serverErr := router.Run(":" + GetEnvOr("PORT", "3000"))
+	serverErr := router.Run(":" + util.GetEnvOr("PORT", "3000"))
 	if serverErr != nil {
 		log.Fatalln("Could not start server; See logs why.")
 	}
