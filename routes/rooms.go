@@ -42,7 +42,7 @@ type PutERRequest struct {
 // @Success     200  			{object} 	GetSingleERResponse
 // @Failure		400				{object}	HTTPErrorResponse
 // @Failure     501  			{object}	HTTPErrorResponse
-// @Router      /er		 		[put]
+// @Router      /er				[put]
 func CreateEmergencyRoom(ctx *gin.Context) {
 	//
 	// Validate body
