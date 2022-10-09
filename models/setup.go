@@ -7,7 +7,6 @@ import (
 	"github.com/jackc/pgerrcode"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"log"
 )
 
@@ -20,9 +19,7 @@ func SetupDatabase(host, user, password, database, port string) {
 		host, user, password, database, port,
 	)
 
-	db, dbErr := gorm.Open(postgres.Open(postgresDSN), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	db, dbErr := gorm.Open(postgres.Open(postgresDSN))
 	if dbErr != nil {
 		log.Fatalln("Could not connect to database: ", dbErr)
 	}
