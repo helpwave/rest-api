@@ -48,8 +48,8 @@ func ginLogger(ctx *gin.Context, _ zerolog.Logger) zerolog.Logger {
 }
 
 func setupRouter() *gin.Engine {
-	router := gin.Default()
-
+	router := gin.New()
+	router.Use(gin.Recovery())
 	router.Use(requestid.New())
 
 	router.Use(logger.SetLogger(logger.WithLogger(ginLogger)))
