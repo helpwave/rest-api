@@ -5,11 +5,11 @@ import (
 )
 
 type EmergencyRoomBase struct {
-	Name               string
-	Location           Point
-	DisplayableAddress string
-	Open               bool  `gorm:"column:is_open;default:true"`
-	Utilization        int16 `gorm:"default:1"`
+	Name               string `binding:"required"`
+	Location           Point  `binding:"required"`
+	DisplayableAddress string `binding:"required"`
+	Open               bool   `gorm:"column:is_open;default:true"`
+	Utilization        int16  `gorm:"default:1"`
 }
 
 type EmergencyRoom struct {

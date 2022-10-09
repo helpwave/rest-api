@@ -3,6 +3,8 @@ package routes
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"log"
 	"net/http"
 	"rest-api/models"
 )
@@ -27,7 +29,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 
 type PutERRequest struct {
 	models.EmergencyRoomBase
-	Departments []models.DepartmentBase
+	Departments []uuid.UUID
 }
 
 // CreateEmergencyRoom godoc
@@ -37,10 +39,54 @@ type PutERRequest struct {
 // @Produce 	json
 // @Param		emergency-room 	body 		PutERRequest		true	"ER to add"
 // @Success     200  			{object} 	GetSingleERResponse
+// @Failure		400				{object}	HTTPErrorResponse
 // @Failure     501  			{object}	HTTPErrorResponse
-// @Router      /er/{id} 		[put]
+// @Router      /er		 		[put]
 func CreateEmergencyRoom(ctx *gin.Context) {
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+	//
+	// Validate body
+	//
+	body := PutERRequest{}
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		log.Println("validation failed")
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	log.Println("req body: ", body)
+
+	//
+	// convert department UUIDs into Departments
+	//
+	deps := make([]models.Department, len(body.Departments))
+	for i := range body.Departments {
+		deps[i].ID = body.Departments[i]
+	}
+
+	//
+	// create model for gORM
+	//
+	er := models.EmergencyRoom{
+		EmergencyRoomBase: body.EmergencyRoomBase,
+		Departments:       deps,
+	}
+	log.Println("model", er)
+
+	db := models.DB
+	db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already
+
+	res := db.Create(&er)
+	if err := res.Error; err != nil {
+		log.Println("db error", err)
+		HandleDBError(ctx, err)
+		return
+	}
+
+	resp := GetSingleERResponse{
+		EmergencyRoom: er,
+		Departments:   models.DepartmentsToBases(er.Departments),
+	}
+
+	ctx.JSON(http.StatusOK, resp)
 }
 
 // UpdateEmergencyRoom godoc

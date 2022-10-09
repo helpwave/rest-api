@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"rest-api/models"
 )
 
 type HTTPError struct {
@@ -31,4 +32,12 @@ type StatusResponse struct {
 // SendOk sends a basic "OK" response
 func SendOk(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, StatusResponse{Ok: true})
+}
+
+func HandleDBError(ctx *gin.Context, err error) {
+	status := http.StatusBadRequest
+	if models.IsOurFault(err) {
+		status = http.StatusInternalServerError
+	}
+	SendError(ctx, status, err)
 }
