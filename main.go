@@ -1,12 +1,15 @@
 package main
 
 import (
+	"github.com/gin-contrib/logger"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.opentelemetry.io/otel/trace"
 	"os"
 	"rest-api/docs"
 	"rest-api/models"
@@ -27,8 +30,29 @@ func setupLogging() {
 	log.Info().Msg("Logging is set up")
 }
 
+func ginLogger(ctx *gin.Context, _ zerolog.Logger) zerolog.Logger {
+	l := log.Logger
+
+	// log otel context in case we ever use it
+	otelContext := trace.SpanFromContext(ctx.Request.Context()).SpanContext()
+	if otelContext.IsValid() {
+		l.With().
+			Str("trace_id", otelContext.TraceID().String()).
+			Str("span_id", otelContext.SpanID().String()).
+			Logger()
+	}
+
+	return l.With().
+		Str("request_id", requestid.Get(ctx)).
+		Logger()
+}
+
 func setupRouter() *gin.Engine {
 	router := gin.Default()
+
+	router.Use(requestid.New())
+
+	router.Use(logger.SetLogger(logger.WithLogger(ginLogger)))
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -77,7 +101,9 @@ func main() {
 
 	router := setupRouter()
 
-	if err := router.Run(":" + GetEnvOr("PORT", "3000")); err != nil {
+	addr := ":" + GetEnvOr("PORT", "3000")
+	log.Info().Str("addr", addr).Msg("starting server")
+	if err := router.Run(addr); err != nil {
 		log.Fatal().Err(err).Msg("Could not start server.")
 	}
 }
