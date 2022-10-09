@@ -3,13 +3,29 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"log"
+	"os"
 	"rest-api/docs"
 	"rest-api/models"
 	"rest-api/routes"
 )
+
+func setupLogging() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	if GetEnvOr("GIN_MODE", "development") != "release" {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
+	}
+	log.Logger = log.With().Caller().Logger()
+	level, err := zerolog.ParseLevel(GetEnvOr("LOG_LEVEL", "info"))
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not parse LOG_LEVEL")
+	}
+	log.Logger = log.Level(level)
+	log.Info().Msg("Logging is set up")
+}
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
@@ -40,10 +56,12 @@ func setSwaggerInfo() {
 }
 
 func main() {
-	dotenvErr := godotenv.Load()
-	if dotenvErr != nil {
-		log.Fatalln("Error loading .env file: ", dotenvErr)
+	setupLogging()
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal().Err(err).Msg("Error loading .env file: ")
 	}
+	log.Info().Msg("no error loading .env file")
 
 	models.SetupDatabase(
 		GetEnvOr("POSTGRES_HOST", "localhost"),
@@ -59,8 +77,7 @@ func main() {
 
 	router := setupRouter()
 
-	serverErr := router.Run(":" + GetEnvOr("PORT", "3000"))
-	if serverErr != nil {
-		log.Fatalln("Could not start server; See logs why.")
+	if err := router.Run(":" + GetEnvOr("PORT", "3000")); err != nil {
+		log.Fatal().Err(err).Msg("Could not start server.")
 	}
 }
