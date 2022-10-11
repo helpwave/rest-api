@@ -21,14 +21,14 @@ func (g GormLogger) LogMode(_ logger.LogLevel) logger.Interface {
 func (g GormLogger) Info(ctx context.Context, s string, i ...interface{}) {
 	log.Ctx(ctx).
 		Info().
-		Msgf(s, i)
+		Msgf(s, i...)
 }
 
 // Warn is used by gorm to do a warn-level log
 func (g GormLogger) Warn(ctx context.Context, s string, i ...interface{}) {
 	log.Ctx(ctx).
 		Warn().
-		Msgf(s, i)
+		Msgf(s, i...)
 }
 
 // Error is used by gorm to do a error-level log
@@ -36,7 +36,7 @@ func (g GormLogger) Error(ctx context.Context, s string, i ...interface{}) {
 	log.
 		Ctx(ctx).
 		Error().
-		Msgf(s, i)
+		Msgf(s, i...)
 }
 
 // Trace is used by gorm to do a trace-level log
