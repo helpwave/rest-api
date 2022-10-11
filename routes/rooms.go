@@ -55,7 +55,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
-	log.Debug().Msgf("req body:", util.Formatted(body))
+	log.Debug().Str("body", util.Formatted(body)).Send()
 
 	//
 	// convert department UUIDs into Departments
@@ -72,7 +72,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 		EmergencyRoomBase: body.EmergencyRoomBase,
 		Departments:       deps,
 	}
-	log.Debug().Msgf("model", util.Formatted(er))
+	log.Debug().Str("model", util.Formatted(er)).Send()
 
 	db := models.GetDB(logCtx)
 	db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already
