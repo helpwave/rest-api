@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"context"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -25,8 +26,20 @@ func GinLogger(ctx *gin.Context, _ zerolog.Logger) zerolog.Logger {
 		Logger()
 }
 
-func GetRequestLogger(ctx *gin.Context) zerolog.Logger {
-	return log.With().
+// GetRequestLogger returns a logger with request information and a context
+// You can use it like this:
+//
+//	func Handler(ctx *gin.Context) {
+//		log, logCtx := logging.GetRequestLogger(ctx)
+//		db := models.GetDB(logCtx)
+//		log.Info().Msg("I'm a Request Handler!") // <- this message will contain request information
+//		db.First(&...) // <- gorm logger contains request information
+//		...
+//	}
+func GetRequestLogger(ctx *gin.Context) (zerolog.Logger, context.Context) {
+	logger := log.With().
 		Str("request_id", requestid.Get(ctx)).
 		Logger()
+	logCtx := logger.WithContext(ctx)
+	return logger, logCtx
 }

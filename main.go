@@ -15,11 +15,11 @@ import (
 )
 
 func setupRouter() *gin.Engine {
-	router := gin.New()         // basic gin router
-	router.Use(gin.Recovery())  // recover form panics and answer with 500
-	router.Use(requestid.New()) // generate a unique id for every request (for logging)
+	router := gin.New()        // basic gin router
+	router.Use(gin.Recovery()) // recover form panics and answer with 500
 
-	router.Use(logger.SetLogger(logger.WithLogger(logging.GinLogger)))
+	router.Use(requestid.New())                                        // generate a unique id for every request (for logging)
+	router.Use(logger.SetLogger(logger.WithLogger(logging.GinLogger))) // set gin's request logger
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
