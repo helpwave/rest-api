@@ -1,30 +1,62 @@
 package models
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
+	"rest-api/logging"
+	"strings"
 )
 
-var DB *gorm.DB = nil
+var database *gorm.DB = nil
 
 // SetupDatabase tries to connect to the database and sets DB, else it exits the process
-func SetupDatabase(host, user, password, database, port string) {
+func SetupDatabase(host, user, password, databaseName, port string) {
+	log.Info().
+		Str("host", host).
+		Str("user", user).
+		Str("password", "<omitted>").
+		Str("database", databaseName).
+		Str("port", port).
+		Msg("connecting to postgres...")
+
 	postgresDSN := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s",
-		host, user, password, database, port,
+		host, user, password, databaseName, port,
 	)
 
-	db, dbErr := gorm.Open(postgres.Open(postgresDSN))
-	if dbErr != nil {
-		log.Fatalln("Could not connect to database: ", dbErr)
+	log.Debug().
+		Str("dsn", strings.Replace(postgresDSN, password, "<omitted>", -1)).
+		Msg("dsn generated")
+
+	config := gorm.Config{
+		Logger: logging.GormLogger{},
 	}
 
-	DB = db
+	db, dbErr := gorm.Open(postgres.Open(postgresDSN), &config)
+	if dbErr != nil {
+		log.Fatal().Err(dbErr).Msg("Could not connect to database: ")
+	}
+	log.Info().Msg("connected to db")
+
+	database = db
+}
+
+func GetDB(logCtx context.Context) *gorm.DB {
+	switch logCtx.(type) {
+	case *gin.Context:
+		log.Warn().Msg("logCtx is of type gin.Context. You probably passed the wrong context to GetDB()!")
+	}
+	if logCtx != nil {
+		return database.WithContext(logCtx)
+	}
+	return database
 }
 
 // IsOurFault returns true when a gORM error is caused by invalid backend configuration
@@ -58,7 +90,7 @@ func IsOurFault(gormError error) bool {
 			errors.Is(gormError, gorm.ErrInvalidValueOfLength)
 
 	if !ours && !theirs {
-		log.Println("Error is neither theirs nor ours!!")
+		log.Error().Err(gormError).Msg("Error is neither theirs nor ours!!")
 		return true // if we don't know the error, we might have caused it
 	}
 

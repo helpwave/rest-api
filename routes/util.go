@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"rest-api/models"
 )
@@ -35,8 +36,8 @@ func SendOk(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, StatusResponse{Ok: true})
 }
 
-func HandleDBError(ctx *gin.Context, err error) {
-	log.Println("db error", err)
+func HandleDBError(ctx *gin.Context, logCtx context.Context, err error) {
+	log.Ctx(logCtx).Warn().Err(err).Msg("db error occurred")
 	status := http.StatusBadRequest
 	if models.IsOurFault(err) {
 		status = http.StatusInternalServerError

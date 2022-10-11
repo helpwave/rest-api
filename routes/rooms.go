@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"log"
 	"net/http"
+	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/util"
 )
@@ -44,16 +44,18 @@ type PutERRequest struct {
 // @Failure     501  			{object}	HTTPErrorResponse
 // @Router      /er				[put]
 func CreateEmergencyRoom(ctx *gin.Context) {
+	log, logCtx := logging.GetRequestLogger(ctx)
+
 	//
 	// Validate body
 	//
 	body := PutERRequest{}
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		log.Println("validation failed")
+		log.Warn().Err(err).Msg("validation failed")
 		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
-	log.Println("req body:", util.Formatted(body))
+	log.Debug().Msgf("req body:", util.Formatted(body))
 
 	//
 	// convert department UUIDs into Departments
@@ -70,14 +72,14 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 		EmergencyRoomBase: body.EmergencyRoomBase,
 		Departments:       deps,
 	}
-	log.Println("model", util.Formatted(er))
+	log.Debug().Msgf("model", util.Formatted(er))
 
-	db := models.DB
+	db := models.GetDB(logCtx)
 	db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already
 
 	res := db.Create(&er)
 	if err := res.Error; err != nil {
-		HandleDBError(ctx, err)
+		HandleDBError(ctx, logCtx, err)
 		return
 	}
 

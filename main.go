@@ -1,19 +1,26 @@
 package main
 
 import (
+	"github.com/gin-contrib/logger"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"log"
 	"rest-api/docs"
+	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/routes"
 	"rest-api/util"
 )
 
 func setupRouter() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()        // basic gin router
+	router.Use(gin.Recovery()) // recover form panics and answer with 500
+
+	router.Use(requestid.New())                                        // generate a unique id for every request (for logging)
+	router.Use(logger.SetLogger(logger.WithLogger(logging.GinLogger))) // set gin's request logger
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -42,8 +49,16 @@ func setSwaggerInfo() {
 
 func main() {
 	dotenvErr := godotenv.Load()
+
+	logging.SetupLogging(
+		util.GetEnvOr("GIN_MODE", "development"),
+		util.GetEnvOr("LOG_LEVEL", "info"),
+	)
+
 	if dotenvErr != nil {
-		log.Fatalln("Error loading .env file: ", dotenvErr)
+		log.Fatal().Err(dotenvErr).Msg("Error loading .env file: ")
+	} else {
+		log.Info().Msg("no error loading .env file")
 	}
 
 	models.SetupDatabase(
@@ -60,8 +75,9 @@ func main() {
 
 	router := setupRouter()
 
-	serverErr := router.Run(":" + util.GetEnvOr("PORT", "3000"))
-	if serverErr != nil {
-		log.Fatalln("Could not start server; See logs why.")
+	addr := ":" + util.GetEnvOr("PORT", "3000")
+	log.Info().Str("addr", addr).Msg("starting server")
+	if err := router.Run(addr); err != nil {
+		log.Fatal().Err(err).Msg("Could not start server.")
 	}
 }
