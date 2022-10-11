@@ -47,15 +47,18 @@ func setSwaggerInfo() {
 }
 
 func main() {
+	dotenvErr := godotenv.Load()
+
 	logging.SetupLogging(
 		GetEnvOr("GIN_MODE", "development"),
 		GetEnvOr("LOG_LEVEL", "info"),
 	)
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatal().Err(err).Msg("Error loading .env file: ")
+	if dotenvErr != nil {
+		log.Fatal().Err(dotenvErr).Msg("Error loading .env file: ")
+	} else {
+		log.Info().Msg("no error loading .env file")
 	}
-	log.Info().Msg("no error loading .env file")
 
 	models.SetupDatabase(
 		GetEnvOr("POSTGRES_HOST", "localhost"),
