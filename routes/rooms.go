@@ -39,7 +39,7 @@ type PutERRequest struct {
 // @Tags       emergency-rooms
 // @Accept     json
 // @Produce    json
-// @Param      emergency-room     body        PutERRequest                        true    "ER to add"
+// @Param      emergency-room                 body            PutERRequest        true    "ER to add"
 // @Success    200                            {object}        GetSingleERResponse
 // @Failure    400                            {object}        HTTPErrorResponse
 // @Failure    501                            {object}        HTTPErrorResponse
