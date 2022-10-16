@@ -17,5 +17,6 @@ func SetupLogging(mode, rawLevel string) {
 		log.Fatal().Err(err).Msg("could not parse LOG_LEVEL")
 	}
 	log.Logger = log.Level(level)
+	zerolog.DefaultContextLogger = &log.Logger
 	log.Info().Msg("Logging is set up")
 }

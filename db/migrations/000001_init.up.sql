@@ -41,3 +41,27 @@ CREATE TABLE IF NOT EXISTS emergencies_need_departments (
     FOREIGN KEY (department_id)
         REFERENCES departments(id)
 );
+
+CREATE TABLE IF NOT EXISTS questions (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    question text NOT NULL UNIQUE -- e.g. "Are children involved?"
+);
+
+CREATE TABLE IF NOT EXISTS answers (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    question_id uuid NOT NULL,
+    answer text NOT NULL, -- e.g. "yes"
+    statement text NOT NULL, -- e.g. "There are children involved"
+    FOREIGN KEY (question_id)
+        REFERENCES questions(id)
+);
+
+CREATE TABLE emergency_related_answers (
+    emergency_id uuid NOT NULL,
+    answer_id uuid NOT NULL,
+    answered_at timestamp NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (emergency_id)
+        REFERENCES emergencies(id),
+    FOREIGN KEY (answer_id)
+        REFERENCES answers(id)
+);

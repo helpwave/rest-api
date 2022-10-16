@@ -16,8 +16,26 @@ env:
   GO_VERSION: '1.19'
 
 jobs:
+  swagger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Get Swag
+        run: |
+          wget https://github.com/swaggo/swag/releases/download/v1.8.6/swag_1.8.6_Linux_x86_64.tar.gz -O swag.tar.gz
+          tar -xzf swag.tar.gz swag
+          rm swag.tar.gz
+          chmod +x swag
+      - run: ./swag init
+      - uses: UnicornGlobal/has-changes-action@v1.0.11
+        id: changed
+      - if: steps.changed.outputs.changed == 1
+        name: Please run swag init and check the new docs in
+        run: exit 1
 
-  lint:    
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3

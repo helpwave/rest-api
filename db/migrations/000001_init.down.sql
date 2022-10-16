@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS emergency_related_answers;
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS emergencies_need_departments;
 DROP TABLE IF EXISTS emergencies;
 DROP TABLE IF EXISTS rooms_have_departments;
