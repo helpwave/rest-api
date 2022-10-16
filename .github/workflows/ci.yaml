@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 10
+          ref: ${{ github.head_ref }}
       - name: Get Swag
         run: |
           wget https://github.com/swaggo/swag/releases/download/v1.8.6/swag_1.8.6_Linux_x86_64.tar.gz -O swag.tar.gz
@@ -29,11 +29,11 @@ jobs:
           rm swag.tar.gz
           chmod +x swag
       - run: ./swag init
-      - uses: marceloprado/has-changed-path@v1
+      - uses: UnicornGlobal/has-changes-action@v1.0.11
         id: changed
         with:
           paths: docs/
-      - if: steps.changed.outputs.changed == 'true'
+      - if: steps.changed.outputs.changed == 1
         name: Please run swag init and check the new docs in
         run: exit 1
 
