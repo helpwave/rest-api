@@ -95,6 +95,13 @@ const docTemplate = `{
                 "summary": "create a new emergency room",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "ER to add",
                         "name": "emergency-room",
                         "in": "body",
@@ -130,6 +137,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Emergency Room's ID",
                         "name": "id",
                         "in": "path",
@@ -160,6 +174,13 @@ const docTemplate = `{
                 ],
                 "summary": "update an emergency room by id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Emergency Room's ID",
