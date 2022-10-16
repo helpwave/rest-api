@@ -13,7 +13,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		log, _ := logging.GetRequestLogger(ctx)
 		authHeader := ctx.GetHeader("Authorization")
 
-		regex := regexp.MustCompile("^Bearer (\\w+)$")
+		regex := regexp.MustCompile(`^Bearer (\w+)$`)
 
 		var err error
 		var token string
