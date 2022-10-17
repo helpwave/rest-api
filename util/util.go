@@ -1,6 +1,10 @@
-package main
+package util
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"strings"
+)
 
 // GetEnvOr returns the environment variable named `key` or returns a default value
 func GetEnvOr(key, fallback string) string {
@@ -9,4 +13,9 @@ func GetEnvOr(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+// Formatted formats anything but makes sure to encode newlines
+func Formatted(arg any) string {
+	return strings.Replace(fmt.Sprintf("%v", arg), "\n", "\\n", -1)
 }

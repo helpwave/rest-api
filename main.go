@@ -12,6 +12,7 @@ import (
 	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/routes"
+	"rest-api/util"
 )
 
 func setupRouter() *gin.Engine {
@@ -50,8 +51,8 @@ func main() {
 	dotenvErr := godotenv.Load()
 
 	logging.SetupLogging(
-		GetEnvOr("GIN_MODE", "development"),
-		GetEnvOr("LOG_LEVEL", "info"),
+		util.GetEnvOr("GIN_MODE", "development"),
+		util.GetEnvOr("LOG_LEVEL", "info"),
 	)
 
 	if dotenvErr != nil {
@@ -61,20 +62,20 @@ func main() {
 	}
 
 	models.SetupDatabase(
-		GetEnvOr("POSTGRES_HOST", "localhost"),
-		GetEnvOr("POSTGRES_USER", "postgres"),
-		GetEnvOr("POSTGRES_PASSWORD", "postgres"),
-		GetEnvOr("POSTGRES_DB", "postgres"),
-		GetEnvOr("POSTGRES_PORT", "5432"),
+		util.GetEnvOr("POSTGRES_HOST", "localhost"),
+		util.GetEnvOr("POSTGRES_USER", "postgres"),
+		util.GetEnvOr("POSTGRES_PASSWORD", "postgres"),
+		util.GetEnvOr("POSTGRES_DB", "postgres"),
+		util.GetEnvOr("POSTGRES_PORT", "5432"),
 	)
 
-	gin.SetMode(GetEnvOr("GIN_MODE", "debug"))
+	gin.SetMode(util.GetEnvOr("GIN_MODE", "debug"))
 
 	setSwaggerInfo()
 
 	router := setupRouter()
 
-	addr := ":" + GetEnvOr("PORT", "3000")
+	addr := ":" + util.GetEnvOr("PORT", "3000")
 	log.Info().Str("addr", addr).Msg("starting server")
 	if err := router.Run(addr); err != nil {
 		log.Fatal().Err(err).Msg("Could not start server.")

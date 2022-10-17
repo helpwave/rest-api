@@ -47,40 +47,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/er/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "emergency-rooms"
-                ],
-                "summary": "get an emergency room by id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Emergency Room's ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.GetSingleERResponse"
-                        }
-                    },
-                    "501": {
-                        "description": "Not Implemented",
-                        "schema": {
-                            "$ref": "#/definitions/routes.HTTPErrorResponse"
-                        }
-                    }
-                }
             },
             "put": {
                 "consumes": [
@@ -109,6 +75,46 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/routes.PutERRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleERResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    },
+                    "501": {
+                        "description": "Not Implemented",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/er/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "get an emergency room by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Emergency Room's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -240,6 +246,10 @@ const docTemplate = `{
         },
         "models.Point": {
             "type": "object",
+            "required": [
+                "lat",
+                "long"
+            ],
             "properties": {
                 "lat": {
                     "type": "number"
@@ -277,6 +287,11 @@ const docTemplate = `{
         },
         "routes.GetSingleERResponse": {
             "type": "object",
+            "required": [
+                "displayableAddress",
+                "location",
+                "name"
+            ],
             "properties": {
                 "departments": {
                     "type": "array",
@@ -333,11 +348,16 @@ const docTemplate = `{
         },
         "routes.PutERRequest": {
             "type": "object",
+            "required": [
+                "displayableAddress",
+                "location",
+                "name"
+            ],
             "properties": {
                 "departments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.DepartmentBase"
+                        "type": "string"
                     }
                 },
                 "displayableAddress": {
