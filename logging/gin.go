@@ -30,11 +30,11 @@ func GinLogger(ctx *gin.Context, _ zerolog.Logger) zerolog.Logger {
 // You can use it like this:
 //
 //	func Handler(ctx *gin.Context) {
-//		log, logCtx := logging.GetRequestLogger(ctx)
-//		db := models.GetDB(logCtx)
-//		log.Info().Msg("I'm a Request Handler!") // <- this message will contain request information
-//		db.First(&...) // <- gorm logger contains request information
-//		...
+//	    log, logCtx := logging.GetRequestLogger(ctx)
+//	    db := models.GetDB(logCtx)
+//	    log.Info().Msg("I'm a Request Handler!") // <- this message will contain request information
+//	    db.First(&...) // <- gorm logger contains request information
+//	    ...
 //	}
 func GetRequestLogger(ctx *gin.Context) (zerolog.Logger, context.Context) {
 	logger := log.With().
