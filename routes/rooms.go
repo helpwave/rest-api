@@ -1,19 +1,19 @@
 package routes
 
 import (
-	"errors"
-	"net/http"
-	"rest-api/logging"
-	"rest-api/models"
-	"rest-api/util"
+    "errors"
+    "net/http"
+    "rest-api/logging"
+    "rest-api/models"
+    "rest-api/util"
 
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+    "github.com/gin-gonic/gin"
+    "github.com/google/uuid"
 )
 
 type GetSingleERResponse struct {
-	models.EmergencyRoom
-	Departments []models.DepartmentBase
+    models.EmergencyRoomBase
+    Departments []models.DepartmentBase
 }
 
 // GetEmergencyRoomById godoc
@@ -25,13 +25,38 @@ type GetSingleERResponse struct {
 // @Failure 501             {object}    HTTPErrorResponse
 // @Router  /er/{id}        [get]
 func GetEmergencyRoomById(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+    log, logCtx := logging.GetRequestLogger(ctx)
+    db := models.GetDB(logCtx)
+
+    erIdRaw := ctx.Param("id")
+    log.Debug().Str("requested_id", erIdRaw)
+    erID, err := uuid.Parse(erIdRaw)
+    if err != nil {
+        SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+        return
+    }
+
+    er := models.EmergencyRoom{
+        ID: erID,
+    }
+
+    tx := db.First(&er)
+    if tx.Error != nil {
+        HandleDBError(ctx, logCtx, tx.Error)
+        return
+    }
+
+    resp := GetSingleERResponse{
+        EmergencyRoomBase: er.EmergencyRoomBase,
+        Departments:       models.DepartmentsToBases(er.Departments),
+    }
+
+    ctx.JSON(http.StatusOK, resp)
 }
 
 type PutERRequest struct {
-	models.EmergencyRoomBase
-	Departments []uuid.UUID
+    models.EmergencyRoomBase
+    Departments []uuid.UUID
 }
 
 // CreateEmergencyRoom godoc
@@ -45,51 +70,51 @@ type PutERRequest struct {
 // @Failure    501                            {object}        HTTPErrorResponse
 // @Router     /er                            [put]
 func CreateEmergencyRoom(ctx *gin.Context) {
-	log, logCtx := logging.GetRequestLogger(ctx)
+    log, logCtx := logging.GetRequestLogger(ctx)
 
-	//
-	// Validate body
-	//
-	body := PutERRequest{}
-	if err := ctx.ShouldBindJSON(&body); err != nil {
-		log.Warn().Err(err).Msg("validation failed")
-		SendError(ctx, http.StatusBadRequest, err)
-		return
-	}
-	log.Debug().Str("body", util.Formatted(body)).Send()
+    //
+    // Validate body
+    //
+    body := PutERRequest{}
+    if err := ctx.ShouldBindJSON(&body); err != nil {
+        log.Warn().Err(err).Msg("validation failed")
+        SendError(ctx, http.StatusBadRequest, err)
+        return
+    }
+    log.Debug().Str("body", util.Formatted(body)).Send()
 
-	//
-	// convert department UUIDs into Departments
-	//
-	deps := make([]models.Department, len(body.Departments))
-	for i := range body.Departments {
-		deps[i].ID = body.Departments[i]
-	}
+    //
+    // convert department UUIDs into Departments
+    //
+    deps := make([]models.Department, len(body.Departments))
+    for i := range body.Departments {
+        deps[i].ID = body.Departments[i]
+    }
 
-	//
-	// create model for gORM
-	//
-	er := models.EmergencyRoom{
-		EmergencyRoomBase: body.EmergencyRoomBase,
-		Departments:       deps,
-	}
-	log.Debug().Str("model", util.Formatted(er)).Send()
+    //
+    // create model for gORM
+    //
+    er := models.EmergencyRoom{
+        EmergencyRoomBase: body.EmergencyRoomBase,
+        Departments:       deps,
+    }
+    log.Debug().Str("model", util.Formatted(er)).Send()
 
-	db := models.GetDB(logCtx)
-	db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already
+    db := models.GetDB(logCtx)
+    db = db.Omit("Departments.*") // do not attempt to create ("upsert") Departments, they have to exist already
 
-	res := db.Create(&er)
-	if err := res.Error; err != nil {
-		HandleDBError(ctx, logCtx, err)
-		return
-	}
+    res := db.Create(&er)
+    if err := res.Error; err != nil {
+        HandleDBError(ctx, logCtx, err)
+        return
+    }
 
-	resp := GetSingleERResponse{
-		EmergencyRoom: er,
-		Departments:   models.DepartmentsToBases(er.Departments),
-	}
+    resp := GetSingleERResponse{
+        EmergencyRoomBase: er.EmergencyRoomBase,
+        Departments:       models.DepartmentsToBases(er.Departments),
+    }
 
-	ctx.JSON(http.StatusOK, resp)
+    ctx.JSON(http.StatusOK, resp)
 }
 
 // UpdateEmergencyRoom godoc
@@ -101,8 +126,8 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 // @Failure    501                             {object}    HTTPErrorResponse
 // @Router     /er/{id}                        [patch]
 func UpdateEmergencyRoom(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+    _ = ctx.Param("id")
+    SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
 }
 
 // DeleteEmergencyRoom godoc
@@ -114,13 +139,13 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Failure    501                        {object}     HTTPErrorResponse
 // @Router    /er/{id}                    [delete]
 func DeleteEmergencyRoom(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+    _ = ctx.Param("id")
+    SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
 }
 
 type GetMultipleERsResponse struct {
-	PaginatedResponse
-	EmergencyRooms []GetSingleERResponse
+    PaginatedResponse
+    EmergencyRooms []GetSingleERResponse
 }
 
 // GetEmergencyRooms godoc
@@ -132,6 +157,6 @@ type GetMultipleERsResponse struct {
 // @Failure    501                         {object}    HTTPErrorResponse
 // @Router     /er                         [get]
 func GetEmergencyRooms(ctx *gin.Context) {
-	_ = ctx.Param("page")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+    _ = ctx.Param("page")
+    SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
 }
