@@ -22,7 +22,7 @@ type GetSingleERResponse struct {
 // @Produce json
 // @Param   id              path        string                true    "Emergency Room's ID"
 // @Success 200             {object}    GetSingleERResponse
-// @Failure 501             {object}    HTTPErrorResponse
+// @Failure 400             {object}    HTTPErrorResponse
 // @Router  /er/{id}        [get]
 func GetEmergencyRoomById(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
