@@ -12,6 +12,7 @@ import (
 )
 
 type GetSingleERResponse struct {
+	ID uuid.UUID
 	models.EmergencyRoomBase
 	Departments []models.DepartmentBase
 }
@@ -47,6 +48,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 	}
 
 	resp := GetSingleERResponse{
+		ID:                er.ID,
 		EmergencyRoomBase: er.EmergencyRoomBase,
 		Departments:       models.DepartmentsToBases(er.Departments),
 	}
@@ -111,6 +113,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 	}
 
 	resp := GetSingleERResponse{
+		ID:                er.ID,
 		EmergencyRoomBase: er.EmergencyRoomBase,
 		Departments:       models.DepartmentsToBases(er.Departments),
 	}
