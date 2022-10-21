@@ -41,8 +41,6 @@ definitions:
         type: array
       displayableAddress:
         type: string
-      id:
-        type: string
       location:
         $ref: '#/definitions/models.Point'
       name:
@@ -197,8 +195,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/routes.GetSingleERResponse'
-        "501":
-          description: Not Implemented
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: get an emergency room by id

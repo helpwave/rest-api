@@ -12,7 +12,8 @@ import (
 )
 
 type GetSingleERResponse struct {
-	models.EmergencyRoom
+	ID uuid.UUID
+	models.EmergencyRoomBase
 	Departments []models.DepartmentBase
 }
 
@@ -22,11 +23,37 @@ type GetSingleERResponse struct {
 // @Produce json
 // @Param   id              path        string                true    "Emergency Room's ID"
 // @Success 200             {object}    GetSingleERResponse
-// @Failure 501             {object}    HTTPErrorResponse
+// @Failure 400             {object}    HTTPErrorResponse
 // @Router  /er/{id}        [get]
 func GetEmergencyRoomById(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+	log, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	erIdRaw := ctx.Param("id")
+	log.Debug().Str("requested_id", erIdRaw)
+	erID, err := uuid.Parse(erIdRaw)
+	if err != nil {
+		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		return
+	}
+
+	er := models.EmergencyRoom{
+		ID: erID,
+	}
+
+	tx := db.First(&er)
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	resp := GetSingleERResponse{
+		ID:                er.ID,
+		EmergencyRoomBase: er.EmergencyRoomBase,
+		Departments:       models.DepartmentsToBases(er.Departments),
+	}
+
+	ctx.JSON(http.StatusOK, resp)
 }
 
 type PutERRequest struct {
@@ -86,8 +113,9 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 	}
 
 	resp := GetSingleERResponse{
-		EmergencyRoom: er,
-		Departments:   models.DepartmentsToBases(er.Departments),
+		ID:                er.ID,
+		EmergencyRoomBase: er.EmergencyRoomBase,
+		Departments:       models.DepartmentsToBases(er.Departments),
 	}
 
 	ctx.JSON(http.StatusOK, resp)

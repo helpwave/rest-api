@@ -124,8 +124,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/routes.GetSingleERResponse"
                         }
                     },
-                    "501": {
-                        "description": "Not Implemented",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }
@@ -300,9 +300,6 @@ const docTemplate = `{
                     }
                 },
                 "displayableAddress": {
-                    "type": "string"
-                },
-                "id": {
                     "type": "string"
                 },
                 "location": {
