@@ -125,6 +125,11 @@ paths:
       consumes:
       - application/json
       parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
       - description: ER to add
         in: body
         name: emergency-room
@@ -152,6 +157,11 @@ paths:
   /er/{id}:
     delete:
       parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
       - description: Emergency Room's ID
         in: path
         name: id
@@ -194,6 +204,11 @@ paths:
       - emergency-rooms
     patch:
       parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
       - description: Emergency Room's ID
         in: path
         name: id

@@ -24,6 +24,7 @@ func SendError(ctx *gin.Context, status int, err error) {
 	}
 	resp := HTTPErrorResponse{Error: httpError}
 	ctx.JSON(status, resp)
+	ctx.Abort()
 }
 
 // StatusResponse should give the caller feedback on the state of the task they submitted
