@@ -39,6 +39,7 @@ type PutERRequest struct {
 // @Tags       emergency-rooms
 // @Accept     json
 // @Produce    json
+// @Param      authorization                  header          string              true    "Bearer: <TOKEN>"
 // @Param      emergency-room                 body            PutERRequest        true    "ER to add"
 // @Success    200                            {object}        GetSingleERResponse
 // @Failure    400                            {object}        HTTPErrorResponse
@@ -96,6 +97,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 // @Summary    update an emergency room by id
 // @Tags       emergency-rooms
 // @Produce    json
+// @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
 // @Param      id                              path        string                true    "Emergency Room's ID"
 // @Success    200                             {object}    GetSingleERResponse
 // @Failure    501                             {object}    HTTPErrorResponse
@@ -109,6 +111,7 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Summary    delete an emergency room by id
 // @Tags       emergency-rooms
 // @Produce    json
+// @Param      authorization              header       string                true    "Bearer: <TOKEN>"
 // @Param      id                         path         string                true    "Emergency Room's ID"
 // @Success    200                        {object}     StatusResponse
 // @Failure    501                        {object}     HTTPErrorResponse
