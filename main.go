@@ -1,6 +1,12 @@
 package main
 
 import (
+	"rest-api/docs"
+	"rest-api/logging"
+	"rest-api/models"
+	"rest-api/routes"
+	"rest-api/util"
+
 	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
@@ -8,11 +14,6 @@ import (
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"rest-api/docs"
-	"rest-api/logging"
-	"rest-api/models"
-	"rest-api/routes"
-	"rest-api/util"
 )
 
 var Version string
@@ -66,10 +67,8 @@ func main() {
 		log.Warn().Msg("Version is empty in production build! Recompile using ldflag '-X main.Version=<version>'")
 	}
 
-	if dotenvErr != nil {
-		log.Fatal().Err(dotenvErr).Msg("Error loading .env file: ")
-	} else {
-		log.Info().Msg("no error loading .env file")
+	if dotenvErr == nil {
+		log.Info().Msg("successfully loaded .env file")
 	}
 
 	models.SetupDatabase(
