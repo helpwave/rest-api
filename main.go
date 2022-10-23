@@ -15,6 +15,8 @@ import (
 	"rest-api/util"
 )
 
+var Version string
+
 func setupRouter() *gin.Engine {
 	router := gin.New()        // basic gin router
 	router.Use(gin.Recovery()) // recover form panics and answer with 500
@@ -28,6 +30,7 @@ func setupRouter() *gin.Engine {
 
 	// this will expose GET /v1/healthz
 	v1.GET("/healthz", routes.HealthzRoute)
+	v1.GET("/version", routes.VersionRoute(Version))
 
 	v1.PUT("/er", routes.AuthMiddleware(), routes.CreateEmergencyRoom)
 	v1.GET("/er", routes.GetEmergencyRooms)
@@ -41,7 +44,7 @@ func setupRouter() *gin.Engine {
 func setSwaggerInfo() {
 	docs.SwaggerInfo.Title = "helpwave rest-api"
 	docs.SwaggerInfo.Description = "helpwave rest-api backend"
-	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Version = Version
 	docs.SwaggerInfo.Host = "main.helpwave.de"
 	docs.SwaggerInfo.BasePath = "/v1"
 	docs.SwaggerInfo.Schemes = []string{"https"}
@@ -50,10 +53,18 @@ func setSwaggerInfo() {
 func main() {
 	dotenvErr := godotenv.Load()
 
+	GinMode := util.GetEnvOr("GIN_MODE", "development")
+	LogLevel := util.GetEnvOr("LOG_LEVEL", "info")
+
 	logging.SetupLogging(
-		util.GetEnvOr("GIN_MODE", "development"),
-		util.GetEnvOr("LOG_LEVEL", "info"),
+		GinMode,
+		LogLevel,
+		Version,
 	)
+
+	if len(Version) == 0 && GinMode != "development" {
+		log.Warn().Msg("Version is empty in production build! Recompile using ldflag '-X main.Version=<version>'")
+	}
 
 	if dotenvErr != nil {
 		log.Fatal().Err(dotenvErr).Msg("Error loading .env file: ")

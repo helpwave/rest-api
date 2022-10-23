@@ -230,6 +230,20 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/version": {
+            "get": {
+                "description": "return version of the running",
+                "summary": "version route",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -300,6 +314,9 @@ const docTemplate = `{
                     }
                 },
                 "displayableAddress": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "location": {

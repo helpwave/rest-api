@@ -41,6 +41,8 @@ definitions:
         type: array
       displayableAddress:
         type: string
+      id:
+        type: string
       location:
         $ref: '#/definitions/models.Point'
       name:
@@ -241,4 +243,13 @@ paths:
           schema:
             $ref: '#/definitions/routes.HealthzResponse'
       summary: health check route
+  /version:
+    get:
+      description: return version of the running
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: version route
 swagger: "2.0"

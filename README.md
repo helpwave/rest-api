@@ -40,6 +40,8 @@ go build
 ```
 will produce a single binary in the root called "rest-api".
 
+> Note: Release builds should be versioned, please compile them using `go build -ldflags="-X main.Version=<version>" .`
+
 ### Gin
 
 We use [gin][gin] for routing.

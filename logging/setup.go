@@ -6,12 +6,12 @@ import (
 	"os"
 )
 
-func SetupLogging(mode, rawLevel string) {
+func SetupLogging(mode, rawLevel, version string) {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	if mode != "release" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
 	}
-	log.Logger = log.With().Caller().Logger()
+	log.Logger = log.With().Caller().Str("version", version).Logger()
 	level, err := zerolog.ParseLevel(rawLevel)
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not parse LOG_LEVEL")
