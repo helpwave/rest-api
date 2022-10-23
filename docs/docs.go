@@ -233,7 +233,7 @@ const docTemplate = `{
         },
         "/version": {
             "get": {
-                "description": "return version of the running",
+                "description": "return the version",
                 "summary": "version route",
                 "responses": {
                     "200": {

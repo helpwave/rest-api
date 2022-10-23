@@ -245,7 +245,7 @@ paths:
       summary: health check route
   /version:
     get:
-      description: return version of the running
+      description: return the version
       responses:
         "200":
           description: OK
