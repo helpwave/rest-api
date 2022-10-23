@@ -141,12 +141,32 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Produce    json
 // @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
 // @Param      id                              path        string                true    "Emergency Room's ID"
-// @Success    200                             {object}    StatusResponse
+// @Success    200
 // @Failure    501                             {object}    HTTPErrorResponse
 // @Router    /er/{id}                         [delete]
 func DeleteEmergencyRoom(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+	log, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	erIdRaw := ctx.Param("id")
+	log.Debug().Str("requested_id", erIdRaw)
+	erID, err := uuid.Parse(erIdRaw)
+	if err != nil {
+		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		return
+	}
+
+	er := models.EmergencyRoom{
+		ID: erID,
+	}
+
+	tx := db.Delete(&er)
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
 
 type GetMultipleERsResponse struct {

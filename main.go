@@ -1,6 +1,12 @@
 package main
 
 import (
+	"rest-api/docs"
+	"rest-api/logging"
+	"rest-api/models"
+	"rest-api/routes"
+	"rest-api/util"
+
 	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
@@ -8,11 +14,6 @@ import (
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"rest-api/docs"
-	"rest-api/logging"
-	"rest-api/models"
-	"rest-api/routes"
-	"rest-api/util"
 )
 
 var Version string
@@ -45,9 +46,9 @@ func setSwaggerInfo() {
 	docs.SwaggerInfo.Title = "helpwave rest-api"
 	docs.SwaggerInfo.Description = "helpwave rest-api backend"
 	docs.SwaggerInfo.Version = Version
-	docs.SwaggerInfo.Host = "main.helpwave.de"
+	docs.SwaggerInfo.Host = util.GetEnvOr("BASE_URL", "api.helpwave.de")
 	docs.SwaggerInfo.BasePath = "/v1"
-	docs.SwaggerInfo.Schemes = []string{"https"}
+	docs.SwaggerInfo.Schemes = []string{"https", "http"}
 }
 
 func main() {
