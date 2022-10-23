@@ -14,6 +14,5 @@ import (
 func VersionRoute(version string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, version)
-		return
 	}
 }
