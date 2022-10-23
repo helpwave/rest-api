@@ -84,6 +84,11 @@ jobs:
 
       - uses: actions/checkout@v3
 
+      - id: commit
+        uses: pr-mpt/actions-commit-hash@v1
+        with:
+            commit: "${{ github.sha }}"
+
       - name: Cache build dependencies
         uses: actions/cache@v3
         with:
@@ -94,7 +99,7 @@ jobs:
         run: go get .
 
       - name: Build
-        run: go build -o bin/helpwave -v
+        run: go build -ldflags="-X main.Version=${{ steps.commit.outputs.short }}" -o bin/helpwave -v
       
       - uses: actions/upload-artifact@v3
         with:
