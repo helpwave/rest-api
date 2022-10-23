@@ -18,7 +18,7 @@ services:
       start_period: 20s
       timeout: 10s
     depends_on:
-      - postgres
+      - migrate
 
   postgres:
     image: postgres
@@ -28,7 +28,21 @@ services:
       POSTGRES_PASSWORD: helpwave
       POSTGRES_DB: helpwave
     volumes:
-      - postgres-helpwave:/var/lib/postgresql/data
+      - "postgres-helpwave:/var/lib/postgresql/data"
+
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - "./db/migrations:/migrations"
+    command: [
+        "-path",
+        "/migrations",
+        "-database",
+        "postgres://helpwave:helpwave@postgres:5432/helpwave?sslmode=disable",
+        "up",
+    ]
+    depends_on:
+      - postgres
 
 volumes:
   postgres-helpwave:
