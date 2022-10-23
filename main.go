@@ -48,7 +48,12 @@ func setSwaggerInfo() {
 	docs.SwaggerInfo.Version = Version
 	docs.SwaggerInfo.Host = util.GetEnvOr("BASE_URL", "api.helpwave.de")
 	docs.SwaggerInfo.BasePath = "/v1"
-	docs.SwaggerInfo.Schemes = []string{"https", "http"}
+
+	scheme := "https"
+	if util.GetEnvOr("UNSECURE", "disabled") == "enabled" {
+		scheme = "http"
+	}
+	docs.SwaggerInfo.Schemes = []string{scheme}
 }
 
 func main() {
