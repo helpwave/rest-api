@@ -2,6 +2,7 @@ package logging
 
 import (
 	"context"
+
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"

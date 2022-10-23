@@ -2,10 +2,11 @@ package routes
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"regexp"
 	"rest-api/logging"
+
+	"github.com/gin-gonic/gin"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
