@@ -142,7 +142,7 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
 // @Param      id                              path        string                true    "Emergency Room's ID"
 // @Success    200
-// @Failure    501                             {object}    HTTPErrorResponse
+// @Failure    400                             {object}    HTTPErrorResponse
 // @Router    /er/{id}                         [delete]
 func DeleteEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
