@@ -12,7 +12,7 @@
                 "tags": [
                     "emergency-rooms"
                 ],
-                "summary": "get emergency rooms",
+                "summary": "get all emergency rooms",
                 "parameters": [
                     {
                         "type": "integer",
@@ -288,6 +288,9 @@
                     }
                 },
                 "displayableAddress": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "location": {

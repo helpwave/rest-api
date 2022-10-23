@@ -24,7 +24,7 @@ const docTemplate = `{
                 "tags": [
                     "emergency-rooms"
                 ],
-                "summary": "get emergency rooms",
+                "summary": "get all emergency rooms",
                 "parameters": [
                     {
                         "type": "integer",
@@ -300,6 +300,9 @@ const docTemplate = `{
                     }
                 },
                 "displayableAddress": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "location": {

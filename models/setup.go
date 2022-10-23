@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"rest-api/logging"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"rest-api/logging"
-	"strings"
 )
 
 var database *gorm.DB = nil

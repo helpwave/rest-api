@@ -2,9 +2,10 @@ package logging
 
 import (
 	"context"
+	"time"
+
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm/logger"
-	"time"
 )
 
 type GormLogger struct {
