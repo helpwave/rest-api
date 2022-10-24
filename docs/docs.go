@@ -158,13 +158,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.StatusResponse"
-                        }
+                        "description": "OK"
                     },
-                    "501": {
-                        "description": "Not Implemented",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }
@@ -388,14 +385,6 @@ const docTemplate = `{
                 },
                 "utilization": {
                     "type": "integer"
-                }
-            }
-        },
-        "routes.StatusResponse": {
-            "type": "object",
-            "properties": {
-                "ok": {
-                    "type": "boolean"
                 }
             }
         }
