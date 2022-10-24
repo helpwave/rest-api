@@ -172,4 +172,15 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
-
+  deploy:
+    needs: [ docker ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: deploying via ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: docker-compose pull && docker-compose down && docker-compose up -d
