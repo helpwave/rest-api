@@ -1,5 +1,9 @@
 # helpwave api
 
+[![Continuous Integration](https://github.com/helpwave/rest-api/actions/workflows/ci.yaml/badge.svg)](https://github.com/helpwave/rest-api/actions/workflows/ci.yaml)
+[![CodeQL](https://github.com/helpwave/rest-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/helpwave/rest-api/actions/workflows/codeql-analysis.yml)
+[![Create release](https://github.com/helpwave/rest-api/actions/workflows/release.yaml/badge.svg)](https://github.com/helpwave/rest-api/actions/workflows/release.yaml)  
+
 The official restful application programming interface of helpwave
 
 ## Environment
