@@ -71,41 +71,8 @@ jobs:
       - name: Test
         run: go test -v -race ./... 
 
-  build:
-    needs: [ lint, test ]
-    runs-on: ubuntu-latest
-    steps:
-
-      - uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - uses: actions/checkout@v3
-
-      - id: commit
-        uses: pr-mpt/actions-commit-hash@v1
-        with:
-            commit: "${{ github.sha }}"
-
-      - name: Cache build dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/_go.sum') }}
-      
-      - name: Install dependencies
-        run: go get .
-
-      - name: Build
-        run: go build -ldflags="-X main.Version=${{ steps.commit.outputs.short }}" -o bin/helpwave -v
-      
-      - uses: actions/upload-artifact@v3
-        with:
-          name: helpwave
-          path: bin/helpwave
-      
   docker:
-    needs: [ build ]
+    needs: [ lint, test ]
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -160,6 +127,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
+          build-args: |
+            VERSION=${{ steps.commit.outputs.short }}
 
       - name: Move cache
         run: |
