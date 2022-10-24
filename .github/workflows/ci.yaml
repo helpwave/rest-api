@@ -5,8 +5,6 @@ on:
     branches: [ '*' ]
     tags: [ 'v*' ]
   pull_request:
-  #schedule:
-  #  - cron: '0 0 */5 * *'
 
 permissions:
   contents: read
@@ -167,7 +165,7 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-          
+
       - name: Check manifest
         if: ${{ github.event_name != 'pull_request' }}
         run: |
@@ -180,8 +178,8 @@ jobs:
     - name: deploying via ssh
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
+        host: ${{ secrets.DEPLOY_SSH_HOSTNAME }}
+        username: ${{ secrets.DEPLOY_SSH_USERNAME }}
+        key: ${{ secrets.DEPLOY_SSH_PRIVATEKEY }}
+        port: ${{ secrets.DEPLOY_SSH_PORT }}
         script: ./pull.sh
