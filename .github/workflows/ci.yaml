@@ -111,6 +111,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
 
+      - id: commit
+        uses: pr-mpt/actions-commit-hash@v1
+        with:
+            commit: "${{ github.sha }}"
+
       - name: Build
         uses: docker/build-push-action@v3
         with:
