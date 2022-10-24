@@ -14,15 +14,63 @@ copy the file to `.env` and edit it to your needs.
 cp .env.example .env
 ```
 ## Docker
+
+### Development Setup
+Use
+```bash
+docker build . -t rest-api --build-arg VERSION=${git rev-parse --short HEAD}
+```
+to build the docker image with your current commit.
+You can than use it by changing the `image`-value in your `docker-compose.yml`.
+```yaml
+image: ghcr.io/helpwave/rest-api:edge
+# to
+image: rest-api
+```  
+
+After that you can simply run `docker compose up -d`.
+Your backend will appear at [http://localhost:80/](http://localhost:80/).
+
+If you want to test your endpoints you can use [swagger](http://localhost:80/swagger/index.html). But you have to add two environment arguments to your `docker-compose.yml`:
+```yaml
+  api:
+    image: ghcr.io/helpwave/rest-api:edge
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: helpwave
+      POSTGRES_PASSWORD: helpwave
+      POSTGRES_DB: helpwave
+    # ...
+#
+# to
+#
+  api:
+    image: rest-api
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: helpwave
+      POSTGRES_PASSWORD: helpwave
+      POSTGRES_DB: helpwave
+      BASE_URL: localhost
+      UNSECURE: enabled
+    # ...
+```
+
+### Database
 Run Docker Compose to start the Database:
 ```bash
-mkdir -p ./data/postgres
-docker-compose up -d postgres
+docker compose up -d postgres
 ```
-if you want to remove the database:
+the database will appear on port `5432` on your host.
+If you want to remove the database:
 ```bash
-docker-compose down posgres
-sudo rm -rf ./data/postgres
+docker compose down -v postgres
 ```
 
 ## Setup
