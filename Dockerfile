@@ -15,8 +15,6 @@ WORKDIR /app
 COPY --from=builder /app/helpwave .
 RUN chmod +x helpwave
 
-RUN touch .env
-
 ENV PORT 80
 ENV GIN_MODE release
 ENV LOG_LEVEL info
