@@ -175,6 +175,7 @@ jobs:
   deploy:
     needs: [ docker ]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: deploying via ssh
       uses: appleboy/ssh-action@master
@@ -183,4 +184,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script: docker-compose pull && docker-compose down && docker-compose up -d
+        script: ./pull.sh
