@@ -83,8 +83,10 @@ go build rest-api
 ```
 and run it using
 ```bash
-go run rest-api
+UNSECURE=enabled BASE_URL=localhost:3000 go run rest-api
 ```
+**NOTICE: The UNSECURE environment variable is NOT RECOMMENDED to use in production**  
+
 The link to the api endpoint: [http://localhost:3000](http://localhost:3000)
 ***
 ```bash
