@@ -173,7 +173,7 @@ jobs:
   deploy:
     needs: [ docker ]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main'
     steps:
     - name: deploying via ssh
       uses: appleboy/ssh-action@master
