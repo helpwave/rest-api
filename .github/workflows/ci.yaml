@@ -111,11 +111,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: helpwave
-          path: bin/helpwave
-
       - name: Build
         uses: docker/build-push-action@v3
         with:
