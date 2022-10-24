@@ -190,17 +190,23 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "ER to update",
+                        "name": "emergency-room",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.PutERRequest"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.GetSingleERResponse"
-                        }
+                        "description": "OK"
                     },
-                    "501": {
-                        "description": "Not Implemented",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }

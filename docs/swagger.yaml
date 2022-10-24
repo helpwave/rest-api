@@ -209,15 +209,19 @@ paths:
         name: id
         required: true
         type: string
+      - description: ER to update
+        in: body
+        name: emergency-room
+        required: true
+        schema:
+          $ref: '#/definitions/routes.PutERRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/routes.GetSingleERResponse'
-        "501":
-          description: Not Implemented
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: update an emergency room by id

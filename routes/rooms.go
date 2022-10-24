@@ -127,12 +127,56 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 // @Produce    json
 // @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
 // @Param      id                              path        string                true    "Emergency Room's ID"
-// @Success    200                             {object}    GetSingleERResponse
-// @Failure    501                             {object}    HTTPErrorResponse
+// @Param      emergency-room                  body        PutERRequest          true    "ER to update"
+// @Success    200
+// @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er/{id}                        [patch]
 func UpdateEmergencyRoom(ctx *gin.Context) {
-	_ = ctx.Param("id")
-	SendError(ctx, http.StatusNotImplemented, errors.New("this endpoint is not implemented yet"))
+	log, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	erIdRaw := ctx.Param("id")
+	log.Debug().Str("update_id", erIdRaw)
+	erID, err := uuid.Parse(erIdRaw)
+	if err != nil {
+		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		return
+	}
+
+	er := models.EmergencyRoom{
+		ID: erID,
+	}
+
+	// validate update body
+	body := PutERRequest{}
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		log.Warn().Err(err).Msg("validation failed")
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	log.Debug().Str("body", util.Formatted(body)).Send()
+
+	// convert department UUIDs into Departments
+	deps := make([]models.Department, len(body.Departments))
+	for i := range body.Departments {
+		deps[i].ID = body.Departments[i]
+	}
+
+	// create update model for gORM
+	updatedEr := models.EmergencyRoom{
+		EmergencyRoomBase: body.EmergencyRoomBase,
+		Departments:       deps,
+	}
+	log.Debug().Str("model", util.Formatted(er)).Send()
+
+	// acutally perform the update
+	tx := db.Where(&er).Updates(&updatedEr)
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
 
 // DeleteEmergencyRoom godoc
@@ -149,7 +193,7 @@ func DeleteEmergencyRoom(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	erIdRaw := ctx.Param("id")
-	log.Debug().Str("requested_id", erIdRaw)
+	log.Debug().Str("delete_id", erIdRaw)
 	erID, err := uuid.Parse(erIdRaw)
 	if err != nil {
 		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
