@@ -141,7 +141,6 @@ jobs:
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
 
   db_changed:
-      needs: [ docker ]
       runs-on: ubuntu-latest
       outputs:
         changed: ${{ steps.filter.outputs.db }}
@@ -195,7 +194,7 @@ jobs:
         run: ./migrate up
 
   deploy:
-    needs: [ migrations ]
+    needs: [ migrations, docker ]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
