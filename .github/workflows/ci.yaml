@@ -169,7 +169,7 @@ jobs:
             rm migrate.tar.gz
             chmod +x migrate
             chmod +x migrate.sh
-            mv migrate /usr/bin
+            sudo mv migrate /usr/bin
       - name: Prepare Postgres
         uses: harmon758/postgresql-action@v1
         with:
@@ -185,13 +185,13 @@ jobs:
           echo "POSTGRES_DB=ci" >> .env
       # First, migrate all the way up
       - name: Up (1/2)
-        run: ./migrate up
+        run: ./migrate.sh up
       # Now check if we can revert everything
       - name: Down
-        run: ./migrate down
+        run: ./migrate.sh down
       # Lastly check if up + down is idempotent
       - name: Up (2/2)
-        run: ./migrate up
+        run: ./migrate.sh up
 
   deploy:
     needs: [ migrations, docker ]
