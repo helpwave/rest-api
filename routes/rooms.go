@@ -148,14 +148,14 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 	}
 	log.Debug().Str("body", util.Formatted(body)).Send()
 
-	// create update model for gORM
+	// create the updating model for gORM
 	updatedEr := models.EmergencyRoom{
 		EmergencyRoomBase: body.EmergencyRoomBase,
 		Departments:       models.UUIDsToDepartments(body.Departments),
 	}
 	log.Debug().Str("model", util.Formatted(er)).Send()
 
-	// acutally perform the update
+	// this performs the actual update
 	tx := db.Where(&er).Updates(&updatedEr)
 	if tx.Error != nil {
 		HandleDBError(ctx, logCtx, tx.Error)

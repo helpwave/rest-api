@@ -22,7 +22,7 @@ func DepartmentsToBases(deps []Department) []DepartmentBase {
 	return bases
 }
 
-// convert department UUIDs into Departments
+// UUIDsToDepartments turns given department UUIDs into an array of Departments
 func UUIDsToDepartments(departments []uuid.UUID) []Department {
 	deps := make([]Department, len(departments))
 	for i := range departments {
