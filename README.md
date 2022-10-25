@@ -25,8 +25,8 @@ docker-compose up -d --build
 ```
 to build the docker image and start all necessary services.
 
-Your backend will listen at [http://localhost:80/](http://localhost:80/).
-If you want to test your endpoints you can use [swagger](http://localhost:80/swagger/index.html).
+Your backend will listen at [http://localhost:3000/](http://localhost:3000/).
+If you want to test your endpoints you can use [swagger](http://localhost:3000/swagger/index.html).
 
 ### Database
 Run Docker Compose to start the Database:

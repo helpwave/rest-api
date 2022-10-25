@@ -3,7 +3,7 @@ FROM golang:1.19 AS builder
 WORKDIR /app
 COPY . /app
 
-ARG VERSION=undefined
+ARG VERSION
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-X main.Version=${VERSION}" -a -o helpwave .
 
 FROM alpine AS production
