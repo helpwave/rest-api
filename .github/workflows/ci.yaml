@@ -171,7 +171,7 @@ jobs:
             chmod +x migrate.sh
             sudo mv migrate /usr/bin
       - name: Prepare Postgres
-        run: docker run --rm -p 5432:5432 -d -e POSTGRES_PASSWORD=ci postgres
+        run: docker run --rm -p 5432:5432 --network="host" -d -e POSTGRES_PASSWORD=ci postgres
       - name: Set up .env
         run: |
           echo "POSTGRES_HOST=localhost" >> .env
