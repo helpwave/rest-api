@@ -171,7 +171,7 @@ jobs:
             chmod +x migrate.sh
             sudo mv migrate /usr/bin
       - name: Prepare Postgres
-        run: docker run --rm -p 5432:5432 -d -e POSTGRES_PASSWORD=ci  postgres
+        run: docker run --rm -p 5432:5432 -d -e POSTGRES_PASSWORD=ci postgres
       - name: Set up .env
         run: |
           echo "POSTGRES_HOST=localhost" >> .env
@@ -184,7 +184,7 @@ jobs:
         run: ./migrate.sh up
       # Now check if we can revert everything
       - name: Down
-        run: ./migrate.sh down
+        run: yes | ./migrate.sh down
       # Lastly check if up + down is idempotent
       - name: Up (2/2)
         run: ./migrate.sh up
