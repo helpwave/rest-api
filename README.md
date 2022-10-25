@@ -14,15 +14,29 @@ copy the file to `.env` and edit it to your needs.
 cp .env.example .env
 ```
 ## Docker
+
+### Production Setup
+Use the `docker-compose.prod.yml` as an example configuration for production purposes.
+
+### Development Setup
+Use
+```bash
+docker-compose up -d --build
+```
+to build the docker image and start all necessary services.
+
+Your backend will listen at [http://localhost:3000/](http://localhost:3000/).
+If you want to test your endpoints you can use [swagger](http://localhost:3000/swagger/index.html).
+
+### Database
 Run Docker Compose to start the Database:
 ```bash
-mkdir -p ./data/postgres
-docker-compose up -d postgres
+docker compose up -d postgres
 ```
-if you want to remove the database:
+the database will appear on port `5432` on your host.
+If you want to remove the database:
 ```bash
-docker-compose down posgres
-sudo rm -rf ./data/postgres
+docker compose down -v postgres
 ```
 
 ## Setup
@@ -37,7 +51,8 @@ and run it using
 ```bash
 go run rest-api
 ```
-The link to the api endpoint: [http://localhost:3000](http://localhost:3000)
+
+The webserver will listen on [http://localhost:3000](http://localhost:3000)
 ***
 ```bash
 go build
