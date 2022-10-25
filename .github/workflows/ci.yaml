@@ -139,8 +139,63 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
+
+  db_changed:
+      needs: [ docker ]
+      runs-on: ubuntu-latest
+      outputs:
+        changed: ${{ steps.filter.outputs.db }}
+      steps:
+        - uses: actions/checkout@v2
+        - uses: dorny/paths-filter@v2
+          id: filter
+          with:
+            filters: |
+              db:
+                - 'db/**'
+        - name: migration files have changed
+          if: steps.filter.outputs.db == 'true'
+          run: echo "Migrations changed!"
+
+  migrations:
+    needs: [ db_changed ]
+    if: needs.db_changed.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download migrate
+        run: |
+            wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz -O migrate.tar.gz
+            tar -xzvf migrate.tar.gz migrate
+            rm migrate.tar.gz
+            chmod +x migrate
+            chmod +x migrate.sh
+            mv migrate /usr/bin
+      - name: Prepare Postgres
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql_db: ci
+          postgresql_user: ci
+          postgresql_password: ci
+      - name: Set up .env
+        run: |
+          echo "POSTGRES_HOST=localhost" >> .env
+          echo "POSTGRES_PORT=5432" >> .env
+          echo "POSTGRES_USER=ci" >> .env
+          echo "POSTGRES_PASSWORD=ci" >> .env
+          echo "POSTGRES_DB=ci" >> .env
+      # First, migrate all the way up
+      - name: Up (1/2)
+        run: ./migrate up
+      # Now check if we can revert everything
+      - name: Down
+        run: ./migrate down
+      # Lastly check if up + down is idempotent
+      - name: Up (2/2)
+        run: ./migrate up
+
   deploy:
-    needs: [ docker ]
+    needs: [ migrations ]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
