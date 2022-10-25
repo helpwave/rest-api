@@ -9,8 +9,8 @@ services:
     ports:
       - "3000:80"
     environment:
-      SCHEME_HTTPS: false
       BASE_URI: localhost:3000
+      SCHEME_HTTPS: "false"
       POSTGRES_HOST: postgres
       POSTGRES_USER: helpwave
       POSTGRES_PASSWORD: helpwave
