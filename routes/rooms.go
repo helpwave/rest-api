@@ -30,7 +30,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	erIdRaw := ctx.Param("id")
-	log.Debug().Str("requested_id", erIdRaw)
+	log.Debug().Str("requested_id", erIdRaw).Send()
 	erID, err := uuid.Parse(erIdRaw)
 	if err != nil {
 		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
@@ -87,19 +87,11 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 	log.Debug().Str("body", util.Formatted(body)).Send()
 
 	//
-	// convert department UUIDs into Departments
-	//
-	deps := make([]models.Department, len(body.Departments))
-	for i := range body.Departments {
-		deps[i].ID = body.Departments[i]
-	}
-
-	//
 	// create model for gORM
 	//
 	er := models.EmergencyRoom{
 		EmergencyRoomBase: body.EmergencyRoomBase,
-		Departments:       deps,
+		Departments:       models.UUIDsToDepartments(body.Departments),
 	}
 	log.Debug().Str("model", util.Formatted(er)).Send()
 
@@ -136,7 +128,7 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	erIdRaw := ctx.Param("id")
-	log.Debug().Str("update_id", erIdRaw)
+	log.Debug().Str("update_id", erIdRaw).Send()
 	erID, err := uuid.Parse(erIdRaw)
 	if err != nil {
 		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
@@ -156,16 +148,10 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 	}
 	log.Debug().Str("body", util.Formatted(body)).Send()
 
-	// convert department UUIDs into Departments
-	deps := make([]models.Department, len(body.Departments))
-	for i := range body.Departments {
-		deps[i].ID = body.Departments[i]
-	}
-
 	// create update model for gORM
 	updatedEr := models.EmergencyRoom{
 		EmergencyRoomBase: body.EmergencyRoomBase,
-		Departments:       deps,
+		Departments:       models.UUIDsToDepartments(body.Departments),
 	}
 	log.Debug().Str("model", util.Formatted(er)).Send()
 
@@ -193,7 +179,7 @@ func DeleteEmergencyRoom(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	erIdRaw := ctx.Param("id")
-	log.Debug().Str("delete_id", erIdRaw)
+	log.Debug().Str("delete_id", erIdRaw).Send()
 	erID, err := uuid.Parse(erIdRaw)
 	if err != nil {
 		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
