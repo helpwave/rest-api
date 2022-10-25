@@ -160,8 +160,23 @@ jobs:
     needs: [ db_changed ]
     if: needs.db_changed.outputs.changed == 'true'
     runs-on: ubuntu-latest
+    container: ubuntu
+
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ci
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Download migrate
         run: |
             wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz -O migrate.tar.gz
@@ -170,11 +185,9 @@ jobs:
             chmod +x migrate
             chmod +x migrate.sh
             sudo mv migrate /usr/bin
-      - name: Prepare Postgres
-        run: docker run --rm -p 5432:5432 --network="host" -d -e POSTGRES_PASSWORD=ci postgres
       - name: Set up .env
         run: |
-          echo "POSTGRES_HOST=localhost" >> .env
+          echo "POSTGRES_HOST=postgres" >> .env
           echo "POSTGRES_PORT=5432" >> .env
           echo "POSTGRES_USER=postgres" >> .env
           echo "POSTGRES_PASSWORD=ci" >> .env
