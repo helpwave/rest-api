@@ -2,24 +2,29 @@ version: "3.8"
 
 services:
   api:
-    build:
-      context: .
-      args:
-        VERSION: dev
+    image: ghcr.io/helpwave/rest-api:edge
+    restart: always
     ports:
-      - "3000:80"
+      - "80:80"
     environment:
-      SCHEME_HTTPS: false
-      BASE_URI: localhost:3000
+      BASE_URI: api.helpwave.de
+      SCHEME_HTTPS: true
       POSTGRES_HOST: postgres
       POSTGRES_USER: helpwave
       POSTGRES_PASSWORD: helpwave
       POSTGRES_DB: helpwave
+    healthcheck:
+      test: curl --fail http://localhost/v1/healthz || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
     depends_on:
       - migrate
 
   postgres:
     image: postgres
+    restart: always
     ports:
       - "5432:5432"
     environment:

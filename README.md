@@ -15,52 +15,18 @@ cp .env.example .env
 ```
 ## Docker
 
+### Production Setup
+Use the `docker-compose.prod.yml` as an example configuration for production purposes.
+
 ### Development Setup
 Use
 ```bash
-docker build . -t rest-api --build-arg VERSION=${git rev-parse --short HEAD}
+docker-compose up -d --build
 ```
-to build the docker image with your current commit.
-You can than use it by changing the `image`-value in your `docker-compose.yml`.
-```yaml
-image: ghcr.io/helpwave/rest-api:edge
-# to
-image: rest-api
-```  
+to build the docker image and start all necessary services.
 
-After that you can simply run `docker compose up -d`.
-Your backend will appear at [http://localhost:80/](http://localhost:80/).
-
-If you want to test your endpoints you can use [swagger](http://localhost:80/swagger/index.html). But you have to add two environment arguments to your `docker-compose.yml`:
-```yaml
-  api:
-    image: ghcr.io/helpwave/rest-api:edge
-    restart: always
-    ports:
-      - "80:80"
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: helpwave
-      POSTGRES_PASSWORD: helpwave
-      POSTGRES_DB: helpwave
-    # ...
-#
-# to
-#
-  api:
-    image: rest-api
-    restart: always
-    ports:
-      - "80:80"
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: helpwave
-      POSTGRES_PASSWORD: helpwave
-      POSTGRES_DB: helpwave
-      BASE_URL: localhost
-      UNSECURE: enabled
-    # ...
-```
+Your backend will listen at [http://localhost:80/](http://localhost:80/).
+If you want to test your endpoints you can use [swagger](http://localhost:80/swagger/index.html).
 
 ### Database
 Run Docker Compose to start the Database:
@@ -83,11 +49,10 @@ go build rest-api
 ```
 and run it using
 ```bash
-UNSECURE=enabled BASE_URL=localhost:3000 go run rest-api
+go run rest-api
 ```
-**NOTICE: The UNSECURE environment variable is NOT RECOMMENDED to use in production**  
 
-The link to the api endpoint: [http://localhost:3000](http://localhost:3000)
+The webserver will listen on [http://localhost:3000](http://localhost:3000)
 ***
 ```bash
 go build
