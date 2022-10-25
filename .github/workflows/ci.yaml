@@ -139,8 +139,72 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
+
+  db_changed:
+      runs-on: ubuntu-latest
+      outputs:
+        changed: ${{ steps.filter.outputs.db }}
+      steps:
+        - uses: actions/checkout@v2
+        - uses: dorny/paths-filter@v2
+          id: filter
+          with:
+            filters: |
+              db:
+                - 'db/**'
+        - name: migration files have changed
+          if: steps.filter.outputs.db == 'true'
+          run: echo "Migrations changed!"
+
+  migrations:
+    needs: [ db_changed ]
+    if: needs.db_changed.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ci
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download migrate
+        run: |
+            wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz -O migrate.tar.gz
+            tar -xzvf migrate.tar.gz migrate
+            rm migrate.tar.gz
+            chmod +x migrate
+            chmod +x migrate.sh
+            sudo mv migrate /usr/bin
+      - name: Set up .env
+        run: |
+          echo "POSTGRES_HOST=localhost" >> .env
+          echo "POSTGRES_PORT=5432" >> .env
+          echo "POSTGRES_USER=postgres" >> .env
+          echo "POSTGRES_PASSWORD=ci" >> .env
+          echo "POSTGRES_DB=postgres" >> .env
+      # First, migrate all the way up
+      - name: Up (1/2)
+        run: ./migrate.sh up
+      # Now check if we can revert everything
+      - name: Down
+        run: yes | ./migrate.sh down
+      # Lastly check if up + down is idempotent
+      - name: Up (2/2)
+        run: ./migrate.sh up
+
   deploy:
-    needs: [ docker ]
+    needs: [ migrations, docker ]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
