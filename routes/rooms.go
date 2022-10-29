@@ -91,11 +91,14 @@ func GetEmergencyRooms(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	var er []models.EmergencyRoom
+	var emergencyRooms []models.EmergencyRoom
+	dbResult, _ := db.Scopes(Paginate(ctx.Request)).Find(&emergencyRooms).Rows()
 
-	result, _ := db.Scopes(Paginate(ctx.Request)).Find(&er).Rows()
+	for dbResult.NextResultSet() {
+		emergencyRooms = append(emergencyRooms, models.EmergencyRoom{})
+	}
 
-	ctx.JSON(http.StatusOK, result)
+	ctx.JSON(http.StatusOK, emergencyRooms)
 }
 
 type PutERRequest struct {
