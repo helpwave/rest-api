@@ -17,37 +17,6 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/er": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "emergency-rooms"
-                ],
-                "summary": "get all emergency rooms",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "0-indexed page number, 0 is assumed when omitted",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.GetMultipleERsResponse"
-                        }
-                    },
-                    "501": {
-                        "description": "Not Implemented",
-                        "schema": {
-                            "$ref": "#/definitions/routes.HTTPErrorResponse"
-                        }
-                    }
-                }
-            },
             "put": {
                 "consumes": [
                     "application/json"
@@ -273,32 +242,6 @@ const docTemplate = `{
                 },
                 "long": {
                     "type": "number"
-                }
-            }
-        },
-        "routes.GetMultipleERsResponse": {
-            "type": "object",
-            "properties": {
-                "emergencyRooms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/routes.GetSingleERResponse"
-                    }
-                },
-                "lastPage": {
-                    "type": "boolean"
-                },
-                "numPages": {
-                    "type": "integer"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                },
-                "totalSite": {
-                    "type": "integer"
                 }
             }
         },
