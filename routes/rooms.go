@@ -60,6 +60,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Tags       emergency-rooms
 // @Produce    json
 // @Param      page                            query       uint                    false   "0-indexed page number, 0 is assumed when omitted"
+// @Param      page_size                       query       uint					   false   "page size, 100 is assumed when omitted"
 // @Success    200                             {object}    []uuid.UUID
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er                             [get]
