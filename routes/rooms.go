@@ -62,8 +62,8 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Tags       emergency-rooms
 // @Produce    json
 // @Param      page                            query       uint                    false   "0-indexed page number, 0 is assumed when omitted"
-// @Success    200                             {object}    GetMultipleERsResponse
-// @Failure    501                             {object}    HTTPErrorResponse
+// @Success    200                             {object}    []uuid.UUID
+// @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er                             [get]
 
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
@@ -92,13 +92,15 @@ func GetEmergencyRooms(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	var emergencyRooms []models.EmergencyRoom
-	dbResult, _ := db.Scopes(Paginate(ctx.Request)).Find(&emergencyRooms).Rows()
+	db.Scopes(Paginate(ctx.Request)).Select("id").Find(&emergencyRooms)
 
-	for dbResult.NextResultSet() {
-		emergencyRooms = append(emergencyRooms, models.EmergencyRoom{})
+	ids := make([]uuid.UUID, len(emergencyRooms))
+
+	for i, emergencyRoom := range emergencyRooms {
+		ids[i] = emergencyRoom.ID
 	}
 
-	ctx.JSON(http.StatusOK, emergencyRooms)
+	ctx.JSON(http.StatusOK, ids)
 }
 
 type PutERRequest struct {
