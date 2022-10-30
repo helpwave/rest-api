@@ -4,12 +4,10 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/util"
-	"strconv"
 )
 
 type GetSingleERResponse struct {
@@ -65,27 +63,6 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Success    200                             {object}    []uuid.UUID
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er                             [get]
-
-func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		q := r.URL.Query()
-		page, _ := strconv.Atoi(q.Get("page"))
-		if page == 0 {
-			page = 1
-		}
-
-		pageSize, _ := strconv.Atoi(q.Get("page_size"))
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := (page - 1) * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
 
 func GetEmergencyRooms(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
