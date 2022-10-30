@@ -140,25 +140,7 @@ jobs:
         run: |
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
 
-  db_changed:
-      runs-on: ubuntu-latest
-      outputs:
-        changed: ${{ steps.filter.outputs.db }}
-      steps:
-        - uses: actions/checkout@v2
-        - uses: dorny/paths-filter@v2
-          id: filter
-          with:
-            filters: |
-              db:
-                - 'db/**'
-        - name: migration files have changed
-          if: steps.filter.outputs.db == 'true'
-          run: echo "Migrations changed!"
-
   migrations:
-    needs: [ db_changed ]
-    if: needs.db_changed.outputs.changed == 'true'
     runs-on: ubuntu-latest
 
     services:
@@ -178,7 +160,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            db:
+              - 'db/**'
       - name: Download migrate
+        if: steps.filter.outputs.db == 'true'
         run: |
             wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz -O migrate.tar.gz
             tar -xzvf migrate.tar.gz migrate
@@ -187,6 +176,7 @@ jobs:
             chmod +x migrate.sh
             sudo mv migrate /usr/bin
       - name: Set up .env
+        if: steps.filter.outputs.db == 'true'
         run: |
           echo "POSTGRES_HOST=localhost" >> .env
           echo "POSTGRES_PORT=5432" >> .env
@@ -195,12 +185,15 @@ jobs:
           echo "POSTGRES_DB=postgres" >> .env
       # First, migrate all the way up
       - name: Up (1/2)
+        if: steps.filter.outputs.db == 'true'
         run: ./migrate.sh up
       # Now check if we can revert everything
       - name: Down
+        if: steps.filter.outputs.db == 'true'
         run: yes | ./migrate.sh down
       # Lastly check if up + down is idempotent
       - name: Up (2/2)
+        if: steps.filter.outputs.db == 'true'
         run: ./migrate.sh up
 
   deploy:
