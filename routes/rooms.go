@@ -64,7 +64,6 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Success    200                             {object}    []uuid.UUID
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er                             [get]
-
 func GetEmergencyRooms(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
