@@ -4,10 +4,12 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"math"
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/util"
+	"strconv"
 )
 
 type GetSingleERResponse struct {
@@ -61,7 +63,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Produce    json
 // @Param      page                            query       uint                    false   "0-indexed page number, 0 is assumed when omitted"
 // @Param      page_size                       query       uint					   false   "page size, 100 is assumed when omitted"
-// @Success    200                             {object}    []uuid.UUID
+// @Success    200                             {object}    GetMultipleERsResponse
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /er                             [get]
 func GetEmergencyRooms(ctx *gin.Context) {
@@ -69,15 +71,47 @@ func GetEmergencyRooms(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	var emergencyRooms []models.EmergencyRoom
-	db.Scopes(Paginate(ctx.Request)).Select("id").Find(&emergencyRooms)
+
+	q := ctx.Request.URL.Query()
+	page, _ := strconv.Atoi(q.Get("page"))
+	if page == 0 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(q.Get("page_size"))
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
+	db.Select("id").Find(&emergencyRooms)
+	totalSize := len(emergencyRooms)
+
+	lastPage := false
+	if page == int(math.Ceil(float64(totalSize)/float64(pageSize))) {
+		lastPage = true
+	}
+
+	db.Scopes(Paginate(page, pageSize)).Select("id").Find(&emergencyRooms)
 
 	ids := make([]uuid.UUID, len(emergencyRooms))
-
 	for i, emergencyRoom := range emergencyRooms {
 		ids[i] = emergencyRoom.ID
 	}
 
-	ctx.JSON(http.StatusOK, ids)
+	resp := GetMultipleERsResponse{
+		PaginatedResponse: PaginatedResponse{
+			Page:      uint(page),
+			PageSize:  uint(pageSize),
+			TotalSize: uint(totalSize),
+			LastPage:  lastPage,
+		},
+		EmergencyRooms: ids,
+	}
+
+	ctx.JSON(http.StatusOK, resp)
 }
 
 type PutERRequest struct {
@@ -225,5 +259,5 @@ func DeleteEmergencyRoom(ctx *gin.Context) {
 
 type GetMultipleERsResponse struct {
 	PaginatedResponse
-	EmergencyRooms []GetSingleERResponse
+	EmergencyRooms []uuid.UUID
 }
