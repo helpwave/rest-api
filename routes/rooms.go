@@ -74,7 +74,7 @@ func GetEmergencyRooms(ctx *gin.Context) {
 
 	q := ctx.Request.URL.Query()
 	page, _ := strconv.Atoi(q.Get("page"))
-	if page == 0 {
+	if page <= 0 {
 		page = 1
 	}
 
