@@ -16,6 +16,23 @@ definitions:
     - lat
     - long
     type: object
+  routes.GetMultipleERsResponse:
+    properties:
+      emergencyRooms:
+        items:
+          type: string
+        type: array
+      lastPage:
+        type: boolean
+      numPages:
+        type: integer
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      totalSite:
+        type: integer
+    type: object
   routes.GetSingleERResponse:
     properties:
       departments:
@@ -81,6 +98,30 @@ info:
   contact: {}
 paths:
   /er:
+    get:
+      parameters:
+      - description: 0-indexed page number, 0 is assumed when omitted
+        in: query
+        name: page
+        type: integer
+      - description: page size, 100 is assumed when omitted
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetMultipleERsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: get all emergency rooms
+      tags:
+      - emergency-rooms
     put:
       consumes:
       - application/json

@@ -5,6 +5,43 @@
     },
     "paths": {
         "/er": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emergency-rooms"
+                ],
+                "summary": "get all emergency rooms",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "0-indexed page number, 0 is assumed when omitted",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page size, 100 is assumed when omitted",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetMultipleERsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            },
             "put": {
                 "consumes": [
                     "application/json"
@@ -230,6 +267,32 @@
                 },
                 "long": {
                     "type": "number"
+                }
+            }
+        },
+        "routes.GetMultipleERsResponse": {
+            "type": "object",
+            "properties": {
+                "emergencyRooms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "lastPage": {
+                    "type": "boolean"
+                },
+                "numPages": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalSite": {
+                    "type": "integer"
                 }
             }
         },
