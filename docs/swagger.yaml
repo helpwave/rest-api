@@ -20,7 +20,7 @@ definitions:
     properties:
       emergencyRooms:
         items:
-          $ref: '#/definitions/routes.GetSingleERResponse'
+          type: string
         type: array
       lastPage:
         type: boolean
@@ -104,6 +104,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: page size, 100 is assumed when omitted
+        in: query
+        name: page_size
+        type: integer
       produces:
       - application/json
       responses:
@@ -111,8 +115,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/routes.GetMultipleERsResponse'
-        "501":
-          description: Not Implemented
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: get all emergency rooms

@@ -31,6 +31,12 @@ const docTemplate = `{
                         "description": "0-indexed page number, 0 is assumed when omitted",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page size, 100 is assumed when omitted",
+                        "name": "page_size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -40,8 +46,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/routes.GetMultipleERsResponse"
                         }
                     },
-                    "501": {
-                        "description": "Not Implemented",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }
@@ -282,7 +288,7 @@ const docTemplate = `{
                 "emergencyRooms": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/routes.GetSingleERResponse"
+                        "type": "string"
                     }
                 },
                 "lastPage": {
