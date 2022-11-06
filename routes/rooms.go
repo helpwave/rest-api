@@ -25,7 +25,7 @@ type GetSingleERResponse struct {
 // @Param   id              path        string                true    "Emergency Room's ID"
 // @Success 200             {object}    GetSingleERResponse
 // @Failure 400             {object}    HTTPErrorResponse
-// @Router  /er/{id}        [get]
+// @Router  /emergency-room/{id}        [get]
 func GetEmergencyRoomById(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
@@ -65,7 +65,7 @@ func GetEmergencyRoomById(ctx *gin.Context) {
 // @Param      page_size                       query       uint					   false   "page size, 100 is assumed when omitted"
 // @Success    200                             {object}    GetMultipleERsResponse
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Router     /er                             [get]
+// @Router     /emergency-room                             [get]
 func GetEmergencyRooms(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
@@ -129,7 +129,7 @@ type PutERRequest struct {
 // @Success    200                             {object}    GetSingleERResponse
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Failure    501                             {object}    HTTPErrorResponse
-// @Router     /er                             [put]
+// @Router     /emergency-room                             [put]
 func CreateEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 
@@ -180,7 +180,7 @@ func CreateEmergencyRoom(ctx *gin.Context) {
 // @Param      emergency-room                  body        PutERRequest          true    "ER to update"
 // @Success    200
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Router     /er/{id}                        [patch]
+// @Router     /emergency-room/{id}                        [patch]
 func UpdateEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
@@ -231,7 +231,7 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Param      id                              path        string                true    "Emergency Room's ID"
 // @Success    200
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Router    /er/{id}                         [delete]
+// @Router    /emergency-room/{id}                         [delete]
 func DeleteEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
