@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
+	"rest-api/util"
 )
 
 type GetDepartmentsResponse struct {
@@ -45,4 +46,61 @@ func GetDepartments(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, resp)
+}
+
+type UpdateDepartmentRequest struct {
+	Name string `bind:"required"`
+}
+
+// UpdateDepartment godoc
+// @Summary    update an department by id
+// @Tags       departments
+// @Produce    json
+// @Param      authorization                   header      string                   true    "Bearer: <TOKEN>"
+// @Param      id                              path        string                   true    "Department's ID"
+// @Param      department                      body        UpdateDepartmentRequest  true    "ER to update"
+// @Success    200
+// @Failure    400                             {object}    HTTPErrorResponse
+// @Router     /department/{id}                [patch]
+func UpdateDepartment(ctx *gin.Context) {
+	log, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	id, err := GetParamUUID(ctx, "id")
+	if err != nil {
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	department := models.Department{
+		DepartmentBase: models.DepartmentBase{
+			ID: id,
+		},
+	}
+	log.Debug().Str("model", util.Formatted(department)).Send()
+
+	// validate update body
+	body := UpdateDepartmentRequest{}
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		log.Warn().Err(err).Msg("validation failed")
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	log.Debug().Str("body", util.Formatted(body)).Send()
+
+	// create the updating model for gORM
+	updatedDepartment := models.Department{
+		DepartmentBase: models.DepartmentBase{
+			Name: body.Name,
+		},
+	}
+
+	// this performs the actual update
+	tx := db.Where(&department).Updates(&updatedDepartment)
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }

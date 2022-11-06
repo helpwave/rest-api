@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -25,14 +24,12 @@ type GetSingleERResponse struct {
 // @Failure 400             {object}    HTTPErrorResponse
 // @Router  /er/{id}        [get]
 func GetEmergencyRoomById(ctx *gin.Context) {
-	log, logCtx := logging.GetRequestLogger(ctx)
+	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	erIdRaw := ctx.Param("id")
-	log.Debug().Str("requested_id", erIdRaw).Send()
-	erID, err := uuid.Parse(erIdRaw)
+	erID, err := GetParamUUID(ctx, "id")
 	if err != nil {
-		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -166,11 +163,9 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	erIdRaw := ctx.Param("id")
-	log.Debug().Str("update_id", erIdRaw).Send()
-	erID, err := uuid.Parse(erIdRaw)
+	erID, err := GetParamUUID(ctx, "id")
 	if err != nil {
-		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -214,14 +209,12 @@ func UpdateEmergencyRoom(ctx *gin.Context) {
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router    /er/{id}                         [delete]
 func DeleteEmergencyRoom(ctx *gin.Context) {
-	log, logCtx := logging.GetRequestLogger(ctx)
+	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	erIdRaw := ctx.Param("id")
-	log.Debug().Str("delete_id", erIdRaw).Send()
-	erID, err := uuid.Parse(erIdRaw)
+	erID, err := GetParamUUID(ctx, "id")
 	if err != nil {
-		SendError(ctx, http.StatusBadRequest, errors.New("invalid uuid"))
+		SendError(ctx, http.StatusBadRequest, err)
 		return
 	}
 

@@ -40,6 +40,7 @@ func setupRouter() *gin.Engine {
 	v1.DELETE("/er/:id", routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
 
 	v1.GET("/departments", routes.GetDepartments)
+	v1.PATCH("/department/:id", routes.AuthMiddleware(), routes.UpdateDepartment)
 	return router
 }
 
