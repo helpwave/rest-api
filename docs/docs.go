@@ -16,6 +16,45 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/departments": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "get all departments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "0-indexed page number, 0 is assumed when omitted",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page size, 100 is assumed when omitted",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetDepartmentsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/er": {
             "get": {
                 "produces": [
@@ -282,6 +321,29 @@ const docTemplate = `{
                 }
             }
         },
+        "routes.GetDepartmentsResponse": {
+            "type": "object",
+            "properties": {
+                "departments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DepartmentBase"
+                    }
+                },
+                "lastPage": {
+                    "type": "boolean"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalSize": {
+                    "type": "integer"
+                }
+            }
+        },
         "routes.GetMultipleERsResponse": {
             "type": "object",
             "properties": {
@@ -294,16 +356,13 @@ const docTemplate = `{
                 "lastPage": {
                     "type": "boolean"
                 },
-                "numPages": {
-                    "type": "integer"
-                },
                 "page": {
                     "type": "integer"
                 },
                 "pageSize": {
                     "type": "integer"
                 },
-                "totalSite": {
+                "totalSize": {
                     "type": "integer"
                 }
             }

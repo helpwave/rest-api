@@ -4,12 +4,10 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"math"
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/util"
-	"strconv"
 )
 
 type GetSingleERResponse struct {
@@ -70,31 +68,19 @@ func GetEmergencyRooms(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
+	pagination, err := GetPagination(ctx, db, models.EmergencyRoom{})
+	if err != nil {
+		HandleDBError(ctx, logCtx, err)
+		return
+	}
+
 	var emergencyRooms []models.EmergencyRoom
+	tx := db.Scopes(Paginate(pagination)).Select("id").Find(&emergencyRooms)
 
-	q := ctx.Request.URL.Query()
-	page, _ := strconv.Atoi(q.Get("page"))
-	if page <= 0 {
-		page = 1
+	if err := tx.Error; err != nil {
+		HandleDBError(ctx, logCtx, err)
+		return
 	}
-
-	pageSize, _ := strconv.Atoi(q.Get("page_size"))
-	switch {
-	case pageSize > 100:
-		pageSize = 100
-	case pageSize <= 0:
-		pageSize = 10
-	}
-
-	db.Select("id").Find(&emergencyRooms)
-	totalSize := len(emergencyRooms)
-
-	lastPage := false
-	if page == int(math.Ceil(float64(totalSize)/float64(pageSize))) {
-		lastPage = true
-	}
-
-	db.Scopes(Paginate(page, pageSize)).Select("id").Find(&emergencyRooms)
 
 	ids := make([]uuid.UUID, len(emergencyRooms))
 	for i, emergencyRoom := range emergencyRooms {
@@ -102,13 +88,8 @@ func GetEmergencyRooms(ctx *gin.Context) {
 	}
 
 	resp := GetMultipleERsResponse{
-		PaginatedResponse: PaginatedResponse{
-			Page:      uint(page),
-			PageSize:  uint(pageSize),
-			TotalSize: uint(totalSize),
-			LastPage:  lastPage,
-		},
-		EmergencyRooms: ids,
+		PaginatedResponse: pagination,
+		EmergencyRooms:    ids,
 	}
 
 	ctx.JSON(http.StatusOK, resp)

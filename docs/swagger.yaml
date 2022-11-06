@@ -16,6 +16,21 @@ definitions:
     - lat
     - long
     type: object
+  routes.GetDepartmentsResponse:
+    properties:
+      departments:
+        items:
+          $ref: '#/definitions/models.DepartmentBase'
+        type: array
+      lastPage:
+        type: boolean
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      totalSize:
+        type: integer
+    type: object
   routes.GetMultipleERsResponse:
     properties:
       emergencyRooms:
@@ -24,13 +39,11 @@ definitions:
         type: array
       lastPage:
         type: boolean
-      numPages:
-        type: integer
       page:
         type: integer
       pageSize:
         type: integer
-      totalSite:
+      totalSize:
         type: integer
     type: object
   routes.GetSingleERResponse:
@@ -97,6 +110,31 @@ definitions:
 info:
   contact: {}
 paths:
+  /departments:
+    get:
+      parameters:
+      - description: 0-indexed page number, 0 is assumed when omitted
+        in: query
+        name: page
+        type: integer
+      - description: page size, 100 is assumed when omitted
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetDepartmentsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: get all departments
+      tags:
+      - departments
   /er:
     get:
       parameters:
