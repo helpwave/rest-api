@@ -24,13 +24,11 @@ definitions:
         type: array
       lastPage:
         type: boolean
-      numPages:
-        type: integer
       page:
         type: integer
       pageSize:
         type: integer
-      totalSite:
+      totalSize:
         type: integer
     type: object
   routes.GetSingleERResponse:

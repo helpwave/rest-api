@@ -294,16 +294,13 @@ const docTemplate = `{
                 "lastPage": {
                     "type": "boolean"
                 },
-                "numPages": {
-                    "type": "integer"
-                },
                 "page": {
                     "type": "integer"
                 },
                 "pageSize": {
                     "type": "integer"
                 },
-                "totalSite": {
+                "totalSize": {
                     "type": "integer"
                 }
             }
