@@ -43,5 +43,18 @@ services:
     depends_on:
       - postgres
 
+  mocks:
+      image: postgres
+      command: /bin/sh -c 'echo "SELECT COUNT(id) FROM emergency_rooms;" | psql --csv -q | grep 0 && psql -f mocks.sql'
+      environment:
+          PGHOST: postgres
+          PGUSER: helpwave
+          PGPASSWORD: helpwave
+          PGDATABASE: helpwave
+      volumes:
+          - "./db/mocks.sql:/mocks.sql:ro"
+      depends_on:
+          - migrate
+
 volumes:
   postgres-helpwave:

@@ -96,6 +96,8 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 
 New migrations can be generated using `migrate create -ext sql -dir db/migrations -seq <title>`.
 
+> We provide mock data as `data/mocks.sql`. When you use the development docker compose setup, those will be automatically inserted.
+
 Users with `bash` installed can use
 ```bash
 ./migration.sh up
