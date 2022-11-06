@@ -45,7 +45,8 @@ services:
 
   mocks:
       image: postgres
-      command: /bin/sh -c 'echo "SELECT COUNT(id) FROM emergency_rooms;" | psql --csv -q | grep 0 && psql -f mocks.sql'
+      # insert data only when emergency_rooms table is empty, as an indicator that the db has not been used
+      command: /bin/sh -c 'echo "SELECT COUNT(id) FROM emergency_rooms;" | psql --csv -q | grep -x 0 && psql -f mocks.sql'
       environment:
           PGHOST: postgres
           PGUSER: helpwave
