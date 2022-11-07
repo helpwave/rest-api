@@ -43,7 +43,7 @@
                 }
             }
         },
-        "/er": {
+        "/emergency-room": {
             "get": {
                 "produces": [
                     "application/json"
@@ -132,7 +132,7 @@
                 }
             }
         },
-        "/er/{id}": {
+        "/emergency-room/{id}": {
             "get": {
                 "produces": [
                     "application/json"
