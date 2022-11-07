@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/er": {
+        "/emergency-room": {
             "get": {
                 "produces": [
                     "application/json"
@@ -144,7 +144,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/er/{id}": {
+        "/emergency-room/{id}": {
             "get": {
                 "produces": [
                     "application/json"

@@ -135,7 +135,7 @@ paths:
       summary: get all departments
       tags:
       - departments
-  /er:
+  /emergency-room:
     get:
       parameters:
       - description: 0-indexed page number, 0 is assumed when omitted
@@ -193,7 +193,7 @@ paths:
       summary: create a new emergency room
       tags:
       - emergency-rooms
-  /er/{id}:
+  /emergency-room/{id}:
     delete:
       parameters:
       - description: 'Bearer: <TOKEN>'
