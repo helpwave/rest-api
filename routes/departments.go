@@ -57,7 +57,6 @@ func GetDepartments(ctx *gin.Context) {
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Failure    404                             {object}    HTTPErrorResponse
 // @Router     /departments/{id}               [delete]
-
 func DeleteDepartment(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
