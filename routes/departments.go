@@ -54,7 +54,7 @@ func GetDepartments(ctx *gin.Context) {
 // @Produce    json
 // @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
 // @Param      id                              path        string                true    "department id"
-// @Success    200							   {object}    HTTPSuccessResponse
+// @Success    200
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /departments/{id}               [delete]
 func DeleteDepartment(ctx *gin.Context) {
