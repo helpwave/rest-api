@@ -54,5 +54,4 @@ func GetPagination(ctx *gin.Context, db *gorm.DB, model interface{}) (PaginatedR
 		TotalSize: totalSize,
 		LastPage:  lastPage,
 	}, nil
-
 }
