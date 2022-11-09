@@ -16,10 +16,13 @@ env:
 jobs:
   swagger:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Get Swag
         run: |
           wget https://github.com/swaggo/swag/releases/download/v1.8.6/swag_1.8.6_Linux_x86_64.tar.gz -O swag.tar.gz
@@ -27,11 +30,14 @@ jobs:
           rm swag.tar.gz
           chmod +x swag
       - run: ./swag init
-      - uses: UnicornGlobal/has-changes-action@v1.0.12
-        id: changed
-      - if: steps.changed.outputs.changed == 1
-        name: Please run swag init and check the new docs in
-        run: exit 1
+      - uses: EndBug/add-and-commit@v9
+        id: commit
+        with:
+          add: 'docs'
+          default_author: github_actions
+          message: 'docs: update swagger docs'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
