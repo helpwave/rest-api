@@ -37,7 +37,7 @@ func setupRouter() *gin.Engine {
 	v1.GET("/emergency-rooms", routes.GetEmergencyRooms)
 	v1.GET("/emergency-rooms/:id", routes.GetEmergencyRoomById)
 	v1.PATCH("/emergency-rooms/:id", routes.AuthMiddleware(), routes.UpdateEmergencyRoom)
-	v1.DELETE("/emergency-rooms/:id", routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
+	v1.DELETE("/emergency-rooms/:id", routes.AuthMiddleware(), routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
 
 	v1.GET("/departments", routes.GetDepartments)
 	v1.DELETE("/departments/:id", routes.DeleteDepartment)

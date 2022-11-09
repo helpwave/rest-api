@@ -52,10 +52,10 @@ func GetDepartments(ctx *gin.Context) {
 // @Summary    delete a department
 // @Tags       departments
 // @Produce    json
-// @Param      id                              path        uuid                    true    "department id"
+// @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
+// @Param      id                              path        string                true    "department id"
 // @Success    200							   {object}    HTTPSuccessResponse
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Failure    404                             {object}    HTTPErrorResponse
 // @Router     /departments/{id}               [delete]
 func DeleteDepartment(ctx *gin.Context) {
 	_, logCtx := logging.GetRequestLogger(ctx)
@@ -69,11 +69,16 @@ func DeleteDepartment(ctx *gin.Context) {
 		},
 	}).Association("Rooms").Clear()
 
-	db.Delete(&models.Department{
+	tx := db.Delete(&models.Department{
 		DepartmentBase: models.DepartmentBase{
 			ID: departmentId,
 		},
 	})
+
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
 
 	if err != nil {
 		HandleDBError(ctx, logCtx, err)
