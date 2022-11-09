@@ -69,7 +69,6 @@ func CreateDepartment(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	//
 	// Validate body
 	//
 	body := CreateDepartmentRequest{}
