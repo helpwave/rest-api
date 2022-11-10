@@ -16,7 +16,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/department": {
+        "/departments": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "get all departments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "0-indexed page number, 0 is assumed when omitted",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page size, 100 is assumed when omitted",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetDepartmentsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            },
             "put": {
                 "produces": [
                     "application/json"
@@ -48,45 +85,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/routes.SingleDepartmentResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/routes.HTTPErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/departments": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "departments"
-                ],
-                "summary": "get all departments",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "0-indexed page number, 0 is assumed when omitted",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "page size, 100 is assumed when omitted",
-                        "name": "page_size",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.GetDepartmentsResponse"
                         }
                     },
                     "400": {
