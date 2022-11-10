@@ -70,7 +70,6 @@ func CreateDepartment(ctx *gin.Context) {
 	db := models.GetDB(logCtx)
 
 	// Validate body
-	//
 	body := CreateDepartmentRequest{}
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		log.Warn().Err(err).Msg("validation failed")
@@ -79,26 +78,20 @@ func CreateDepartment(ctx *gin.Context) {
 	}
 	log.Debug().Str("body", util.Formatted(body)).Send()
 
-	//
 	// create model for gORM
-	//
 	department := models.Department{
 		DepartmentBase: models.DepartmentBase{Name: body.Name},
 	}
 	log.Debug().Str("model", util.Formatted(department)).Send()
 
-	//
 	// add to database
-	//
 	res := db.Create(&department)
 	if err := res.Error; err != nil {
 		HandleDBError(ctx, logCtx, err)
 		return
 	}
 
-	//
 	// return result
-	//
 	resp := SingleDepartmentResponse{
 		DepartmentBase: department.DepartmentBase,
 	}
