@@ -33,14 +33,16 @@ func setupRouter() *gin.Engine {
 	v1.GET("/healthz", routes.HealthzRoute)
 	v1.GET("/version", routes.VersionRoute(Version))
 
-	v1.PUT("/emergency-room", routes.AuthMiddleware(), routes.CreateEmergencyRoom)
-	v1.GET("/emergency-room", routes.GetEmergencyRooms)
-	v1.GET("/emergency-room/:id", routes.GetEmergencyRoomById)
-	v1.PATCH("/emergency-room/:id", routes.AuthMiddleware(), routes.UpdateEmergencyRoom)
-	v1.DELETE("/emergency-room/:id", routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
+	v1.PUT("/emergency-rooms", routes.AuthMiddleware(), routes.CreateEmergencyRoom)
+	v1.GET("/emergency-rooms", routes.GetEmergencyRooms)
+	v1.GET("/emergency-rooms/:id", routes.GetEmergencyRoomById)
+	v1.PATCH("/emergency-rooms/:id", routes.AuthMiddleware(), routes.UpdateEmergencyRoom)
+	v1.DELETE("/emergency-rooms/:id", routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
 
 	v1.GET("/departments", routes.GetDepartments)
-	v1.PATCH("/department/:id", routes.AuthMiddleware(), routes.UpdateDepartment)
+	v1.PATCH("/departments/:id", routes.AuthMiddleware(), routes.UpdateDepartment)
+	v1.DELETE("/departments/:id", routes.AuthMiddleware(), routes.DeleteDepartment)
+
 	return router
 }
 

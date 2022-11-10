@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
@@ -61,7 +62,7 @@ type UpdateDepartmentRequest struct {
 // @Param      department                      body        UpdateDepartmentRequest  true    "ER to update"
 // @Success    200
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Router     /department/{id}                [patch]
+// @Router     /departments/{id}                [patch]
 func UpdateDepartment(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
@@ -99,6 +100,46 @@ func UpdateDepartment(ctx *gin.Context) {
 	tx := db.Where(&department).Updates(&updatedDepartment)
 	if tx.Error != nil {
 		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+}
+
+// DeleteDepartment godoc
+// @Summary    delete a department
+// @Tags       departments
+// @Produce    json
+// @Param      authorization                   header      string                true    "Bearer: <TOKEN>"
+// @Param      id                              path        string                true    "department id"
+// @Success    200
+// @Failure    400                             {object}    HTTPErrorResponse
+// @Router     /departments/{id}               [delete]
+func DeleteDepartment(ctx *gin.Context) {
+	_, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	departmentId, _ := uuid.Parse(ctx.Param("id"))
+
+	err := db.Model(&models.Department{
+		DepartmentBase: models.DepartmentBase{
+			ID: departmentId,
+		},
+	}).Association("Rooms").Clear()
+
+	tx := db.Delete(&models.Department{
+		DepartmentBase: models.DepartmentBase{
+			ID: departmentId,
+		},
+	})
+
+	if tx.Error != nil {
+		HandleDBError(ctx, logCtx, tx.Error)
+		return
+	}
+
+	if err != nil {
+		HandleDBError(ctx, logCtx, err)
 		return
 	}
 

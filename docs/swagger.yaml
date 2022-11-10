@@ -115,7 +115,56 @@ definitions:
 info:
   contact: {}
 paths:
-  /department/{id}:
+  /departments:
+    get:
+      parameters:
+      - description: 0-indexed page number, 0 is assumed when omitted
+        in: query
+        name: page
+        type: integer
+      - description: page size, 100 is assumed when omitted
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetDepartmentsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: get all departments
+      tags:
+      - departments
+  /departments/{id}:
+    delete:
+      parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: department id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: delete a department
+      tags:
+      - departments
     patch:
       parameters:
       - description: 'Bearer: <TOKEN>'
@@ -144,31 +193,6 @@ paths:
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: update an department by id
-      tags:
-      - departments
-  /departments:
-    get:
-      parameters:
-      - description: 0-indexed page number, 0 is assumed when omitted
-        in: query
-        name: page
-        type: integer
-      - description: page size, 100 is assumed when omitted
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/routes.GetDepartmentsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/routes.HTTPErrorResponse'
-      summary: get all departments
       tags:
       - departments
   /emergency-room:
