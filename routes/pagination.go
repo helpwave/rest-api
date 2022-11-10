@@ -3,7 +3,6 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"rest-api/util"
 	"strconv"
 )
 
@@ -40,7 +39,7 @@ func GetPagination(ctx *gin.Context, db *gorm.DB, model interface{}) (PaginatedR
 	}
 
 	var totalSize int64
-	tx := db.Table(util.GetTableName(db, model)).Count(&totalSize)
+	tx := db.Model(model).Count(&totalSize)
 
 	if tx.Error != nil {
 		return PaginatedResponse{}, tx.Error

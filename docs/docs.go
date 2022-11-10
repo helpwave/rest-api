@@ -98,6 +98,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/departments/{id}": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "delete a department",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "department id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/emergency-room": {
             "get": {
                 "produces": [
