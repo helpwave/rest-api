@@ -99,7 +99,7 @@ func CreateDepartment(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, resp)
-
+}
 
 // DeleteDepartment godoc
 // @Summary    delete a department
