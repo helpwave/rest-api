@@ -16,6 +16,13 @@ definitions:
     - lat
     - long
     type: object
+  routes.CreateDepartmentRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   routes.GetDepartmentsResponse:
     properties:
       departments:
@@ -107,6 +114,13 @@ definitions:
     - location
     - name
     type: object
+  routes.SingleDepartmentResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   routes.UpdateDepartmentRequest:
     properties:
       name:
@@ -138,6 +152,33 @@ paths:
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: get all departments
+      tags:
+      - departments
+    put:
+      parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Dep. to add
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreateDepartmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.SingleDepartmentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: create new department
       tags:
       - departments
   /departments/{id}:

@@ -1,12 +1,13 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"rest-api/logging"
 	"rest-api/models"
 	"rest-api/util"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type GetDepartmentsResponse struct {
@@ -104,6 +105,57 @@ func UpdateDepartment(ctx *gin.Context) {
 	}
 
 	ctx.Status(http.StatusOK)
+}
+
+type SingleDepartmentResponse struct {
+	models.DepartmentBase
+}
+
+type CreateDepartmentRequest struct {
+	Name string `binding:"required"`
+}
+
+// CreateDepartment godoc
+// @Summary    create new department
+// @Tags       departments
+// @Produce    json
+// @Param      authorization                   header      string                    true    "Bearer: <TOKEN>"
+// @Param      department                      body        CreateDepartmentRequest   true    "Dep. to add"
+// @Success    200                             {object}    SingleDepartmentResponse
+// @Failure    400                             {object}    HTTPErrorResponse
+// @Router     /departments                    [put]
+func CreateDepartment(ctx *gin.Context) {
+	log, logCtx := logging.GetRequestLogger(ctx)
+	db := models.GetDB(logCtx)
+
+	// validate body
+	body := CreateDepartmentRequest{}
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		log.Warn().Err(err).Msg("validation failed")
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	log.Debug().Str("body", util.Formatted(body)).Send()
+
+	// create model for gORM
+	department := models.Department{
+		DepartmentBase: models.DepartmentBase{Name: body.Name},
+	}
+	log.Debug().Str("model", util.Formatted(department)).Send()
+
+	// add to database
+	res := db.Create(&department)
+	if err := res.Error; err != nil {
+		HandleDBError(ctx, logCtx, err)
+		return
+	}
+
+	// return result
+	resp := SingleDepartmentResponse{
+		DepartmentBase: department.DepartmentBase,
+	}
+
+	ctx.JSON(http.StatusOK, resp)
 }
 
 // DeleteDepartment godoc
