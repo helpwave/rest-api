@@ -71,7 +71,7 @@ func CreateDepartment(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)
 	db := models.GetDB(logCtx)
 
-	// Validate body
+	// validate body
 	body := CreateDepartmentRequest{}
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		log.Warn().Err(err).Msg("validation failed")
