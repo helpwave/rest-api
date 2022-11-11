@@ -40,6 +40,7 @@ func setupRouter() *gin.Engine {
 	v1.DELETE("/emergency-rooms/:id", routes.AuthMiddleware(), routes.DeleteEmergencyRoom)
 
 	v1.GET("/departments", routes.GetDepartments)
+	v1.PUT("/departments", routes.AuthMiddleware(), routes.CreateDepartment)
 	v1.DELETE("/departments/:id", routes.AuthMiddleware(), routes.DeleteDepartment)
 
 	return router
