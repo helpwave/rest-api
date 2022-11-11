@@ -2,6 +2,8 @@ package routes
 
 import (
 	"context"
+	"errors"
+	"github.com/google/uuid"
 	"net/http"
 	"rest-api/models"
 
@@ -35,4 +37,13 @@ func HandleDBError(ctx *gin.Context, logCtx context.Context, err error) {
 		status = http.StatusInternalServerError
 	}
 	SendError(ctx, status, err)
+}
+
+func GetParamUUID(ctx *gin.Context, param string) (uuid.UUID, error) {
+	raw := ctx.Param(param)
+	parsed, err := uuid.Parse(raw)
+	if err != nil {
+		return uuid.UUID{}, errors.New(raw + " is an invalid uuid")
+	}
+	return parsed, nil
 }

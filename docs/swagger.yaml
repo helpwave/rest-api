@@ -121,6 +121,11 @@ definitions:
       name:
         type: string
     type: object
+  routes.UpdateDepartmentRequest:
+    properties:
+      name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -199,6 +204,36 @@ paths:
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: delete a department
+      tags:
+      - departments
+    patch:
+      parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Department's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ER to update
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdateDepartmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: update an department by id
       tags:
       - departments
   /emergency-room:

@@ -132,6 +132,51 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "update an department by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Department's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ER to update",
+                        "name": "department",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.UpdateDepartmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/emergency-room": {
@@ -555,6 +600,14 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "routes.UpdateDepartmentRequest": {
+            "type": "object",
+            "properties": {
                 "name": {
                     "type": "string"
                 }
