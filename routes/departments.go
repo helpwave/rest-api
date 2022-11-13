@@ -51,7 +51,7 @@ func GetDepartments(ctx *gin.Context) {
 }
 
 type UpdateDepartmentRequest struct {
-	Name string `bind:"required"`
+	Name string `bind:"required" example:"pediatric surgery"`
 }
 
 // UpdateDepartment godoc
@@ -112,7 +112,7 @@ type SingleDepartmentResponse struct {
 }
 
 type CreateDepartmentRequest struct {
-	Name string `binding:"required"`
+	Name string `binding:"required" example:"pediatric surgery"`
 }
 
 // CreateDepartment godoc

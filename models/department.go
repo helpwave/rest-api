@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type DepartmentBase struct {
 	ID   uuid.UUID
-	Name string
+	Name string `example:"pediatric surgery"`
 }
 
 type Department struct {

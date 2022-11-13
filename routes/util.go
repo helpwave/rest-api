@@ -12,8 +12,8 @@ import (
 )
 
 type HTTPError struct {
-	Code    int
-	Message string
+	Code    int    `example:"500"`
+	Message string `example:"Some complicated error message here"`
 }
 
 type HTTPErrorResponse struct {

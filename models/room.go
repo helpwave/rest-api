@@ -5,11 +5,11 @@ import (
 )
 
 type EmergencyRoomBase struct {
-	Name               string `binding:"required"`
+	Name               string `binding:"required" example:"Uniklinikum Münster"`
 	Location           Point  `binding:"required"`
-	DisplayableAddress string `binding:"required"`
+	DisplayableAddress string `binding:"required" example:"Kardinal-von-Galen-Ring 10, 48149 Münster, Germany"`
 	Open               bool   `gorm:"column:is_open;default:true"`
-	Utilization        int16  `gorm:"default:1"`
+	Utilization        int16  `gorm:"default:1" example:"4"`
 }
 
 type EmergencyRoom struct {

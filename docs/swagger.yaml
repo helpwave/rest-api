@@ -4,13 +4,16 @@ definitions:
       id:
         type: string
       name:
+        example: pediatric surgery
         type: string
     type: object
   models.Point:
     properties:
       lat:
+        example: 51.9893434
         type: number
       long:
+        example: 7.62613583
         type: number
     required:
     - lat
@@ -19,6 +22,7 @@ definitions:
   routes.CreateDepartmentRequest:
     properties:
       name:
+        example: pediatric surgery
         type: string
     required:
     - name
@@ -60,16 +64,19 @@ definitions:
           $ref: '#/definitions/models.DepartmentBase'
         type: array
       displayableAddress:
+        example: Kardinal-von-Galen-Ring 10, 48149 Münster, Germany
         type: string
       id:
         type: string
       location:
         $ref: '#/definitions/models.Point'
       name:
+        example: Uniklinikum Münster
         type: string
       open:
         type: boolean
       utilization:
+        example: 4
         type: integer
     required:
     - displayableAddress
@@ -79,8 +86,10 @@ definitions:
   routes.HTTPError:
     properties:
       code:
+        example: 500
         type: integer
       message:
+        example: Some complicated error message here
         type: string
     type: object
   routes.HTTPErrorResponse:
@@ -100,14 +109,17 @@ definitions:
           type: string
         type: array
       displayableAddress:
+        example: Kardinal-von-Galen-Ring 10, 48149 Münster, Germany
         type: string
       location:
         $ref: '#/definitions/models.Point'
       name:
+        example: Uniklinikum Münster
         type: string
       open:
         type: boolean
       utilization:
+        example: 4
         type: integer
     required:
     - displayableAddress
@@ -119,11 +131,13 @@ definitions:
       id:
         type: string
       name:
+        example: pediatric surgery
         type: string
     type: object
   routes.UpdateDepartmentRequest:
     properties:
       name:
+        example: pediatric surgery
         type: string
     type: object
 info:
