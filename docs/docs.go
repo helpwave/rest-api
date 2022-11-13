@@ -426,7 +426,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pediatric surgery"
                 }
             }
         },
@@ -438,10 +439,12 @@ const docTemplate = `{
             ],
             "properties": {
                 "lat": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 51.9893434
                 },
                 "long": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 7.62613583
                 }
             }
         },
@@ -452,7 +455,8 @@ const docTemplate = `{
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pediatric surgery"
                 }
             }
         },
@@ -517,7 +521,8 @@ const docTemplate = `{
                     }
                 },
                 "displayableAddress": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Kardinal-von-Galen-Ring 10, 48149 Münster, Germany"
                 },
                 "id": {
                     "type": "string"
@@ -526,13 +531,15 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.Point"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Uniklinikum Münster"
                 },
                 "open": {
                     "type": "boolean"
                 },
                 "utilization": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 4
                 }
             }
         },
@@ -540,10 +547,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 500
                 },
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Some complicated error message here"
                 }
             }
         },
@@ -578,19 +587,22 @@ const docTemplate = `{
                     }
                 },
                 "displayableAddress": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Kardinal-von-Galen-Ring 10, 48149 Münster, Germany"
                 },
                 "location": {
                     "$ref": "#/definitions/models.Point"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Uniklinikum Münster"
                 },
                 "open": {
                     "type": "boolean"
                 },
                 "utilization": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 4
                 }
             }
         },
@@ -601,7 +613,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pediatric surgery"
                 }
             }
         },
@@ -609,7 +622,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pediatric surgery"
                 }
             }
         }
