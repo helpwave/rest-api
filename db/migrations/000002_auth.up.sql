@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS organizations_have_users (
 
 ALTER TABLE emergency_rooms
 ADD COLUMN IF NOT EXISTS
-owned_by UUID NOT NULL;
+organization_id UUID NOT NULL;
 
 
 ALTER TABLE emergency_rooms
-ADD CONSTRAINT emergency_rooms_owned_by_foreign_key_constraint
-FOREIGN KEY (owned_by) REFERENCES organizations(id);
+ADD CONSTRAINT emergency_rooms_organization_id_foreign_key_constraint
+FOREIGN KEY (organization_id) REFERENCES organizations(id);
