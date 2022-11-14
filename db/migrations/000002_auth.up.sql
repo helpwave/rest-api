@@ -4,10 +4,18 @@ CREATE TABLE IF NOT EXISTS users (
     email text NOT NULL UNIQUE,
     pw_bcrypt text NOT NULL, -- already includes salt
     full_name text,
-    avatar_url text,
-    is_admin BOOL DEFAULT FALSE
+    avatar_url text
 );
 
+CREATE TYPE global_role AS ENUM ('admin');
+
+CREATE TABLE IF NOT EXISTS global_roles (
+	user_id uuid NOT NULL,
+	role global_role NOT NULL,
+	FOREIGN KEY (user_id)
+		REFERENCES users(id),
+	UNIQUE (user_id, role)
+);
 
 CREATE TABLE IF NOT EXISTS organizations (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),

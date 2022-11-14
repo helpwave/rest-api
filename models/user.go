@@ -2,6 +2,8 @@ package models
 
 import "github.com/google/uuid"
 
+const Admin = "admin"
+
 type UserBase struct {
 	ID        uuid.UUID
 	Email     string
@@ -12,6 +14,11 @@ type UserBase struct {
 type User struct {
 	UserBase
 	PwBcrypt      string
-	IsAdmin       bool
+	GlobalRoles   []GlobalRole
 	Organizations []Organization `gorm:"many2many:organizations_have_users"`
+}
+
+type GlobalRole struct {
+	UserID uuid.UUID
+	Role   string
 }

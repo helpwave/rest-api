@@ -5,11 +5,13 @@ INSERT INTO organizations (id, long_name, contact_email) VALUES ('84d34b8c-0d0a-
 INSERT INTO organizations (id, long_name, short_name, contact_email) VALUES ('960467b1-044b-41c2-9904-a4d6c2d01b77', 'Test Organization Two', 'Test Org 2', 'example2@helpwave.de');
 
 -- Users
-insert into users (email, pw_bcrypt, full_name, avatar_url, is_admin) values ('admin@helpwave.de', '$2y$10$ZIx85OvaeqKWPjCP1LyGqul267XRI/EwKuMYHoPtUjPy.0B2jbhfu', 'Helpwave Admin', null, true); -- pw: admin
-insert into users (email, pw_bcrypt, full_name, avatar_url, is_admin) values ('vfitzhenry1@ycombinator.com', '$2y$10$VaofHb3oj2eKYH05LoJM1eAUCq.DHbH41yiRFA1JeW1cQ1706msx.', 'Vyky Fitzhenry', 'http://dummyimage.com/100x100.png/5fa2dd/ffffff', true);
-insert into users (email, pw_bcrypt, full_name, avatar_url, is_admin) values ('escottini2@google.cn', '$2y$10$GzfYvNr1UDUscPrD8JlEiOXe122X41DI0..V2PtmcI1qFfFZyhY92', 'Ewen Scottini', null, true);
-insert into users (email, pw_bcrypt, full_name, avatar_url, is_admin) values ('kcowpland4@devhub.com', '$2y$10$Jpt4T6FbKMGZc9Ow6XwqP.gFS5Z7hSEvMU35lJL9I5IqPYSq86Zyq', 'Kennett Cowpland', 'http://dummyimage.com/100x100.png/dddddd/000000', false);
-insert into users (email, pw_bcrypt, full_name, avatar_url, is_admin) values ('jkilpatrick5@godaddy.com', '$2y$10$B.ZkuO1hNnkSCW//MFCJj.nE5grJOQMpj4pmhoMtQQTaHhn6DGd1m', 'Jack Kilpatrick', 'http://dummyimage.com/100x100.png/cc0000/ffffff', false);
+INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('admin@helpwave.de', '$2y$10$ZIx85OvaeqKWPjCP1LyGqul267XRI/EwKuMYHoPtUjPy.0B2jbhfu', 'Helpwave Admin', null); -- pw: admin
+INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('vfitzhenry1@ycombinator.com', '$2y$10$VaofHb3oj2eKYH05LoJM1eAUCq.DHbH41yiRFA1JeW1cQ1706msx.', 'Vyky Fitzhenry', 'http://dummyimage.com/100x100.png/5fa2dd/ffffff');
+INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('escottini2@google.cn', '$2y$10$GzfYvNr1UDUscPrD8JlEiOXe122X41DI0..V2PtmcI1qFfFZyhY92', 'Ewen Scottini', null);
+INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('kcowpland4@devhub.com', '$2y$10$Jpt4T6FbKMGZc9Ow6XwqP.gFS5Z7hSEvMU35lJL9I5IqPYSq86Zyq', 'Kennett Cowpland', 'http://dummyimage.com/100x100.png/dddddd/000000');
+INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('jkilpatrick5@godaddy.com', '$2y$10$B.ZkuO1hNnkSCW//MFCJj.nE5grJOQMpj4pmhoMtQQTaHhn6DGd1m', 'Jack Kilpatrick', 'http://dummyimage.com/100x100.png/cc0000/ffffff');
+
+INSERT INTO global_roles (role, user_id) SELECT 'admin', u.id FROM users AS u WHERE u.email = 'admin@helpwave.de';
 
 INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'admin@helpwave.de' AND o.contact_email = 'example@helpwave.de';
 INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'admin@helpwave.de' AND o.contact_email = 'example2@helpwave.de';
