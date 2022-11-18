@@ -4,10 +4,10 @@ import "github.com/google/uuid"
 
 type OrganizationBase struct {
 	ID           uuid.UUID
-	LongName     string
+	LongName     string `gorm:"default:NULL"`
 	ShortName    string `gorm:"default:NULL"`
 	AvatarUrl    string `gorm:"default:NULL"`
-	ContactEmail string
+	ContactEmail string `gorm:"default:NULL"`
 }
 
 type Organization struct {
