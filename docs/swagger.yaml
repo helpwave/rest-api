@@ -42,6 +42,30 @@ definitions:
     - contactEmail
     - longName
     type: object
+  routes.CreateUserRequest:
+    properties:
+      admin:
+        type: boolean
+      email:
+        type: string
+      fullName:
+        type: string
+      organization:
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+    required:
+    - email
+    - fullName
+    - password
+    type: object
+  routes.CreateUserResponse:
+    properties:
+      userID:
+        type: string
+    type: object
   routes.GetDepartmentsResponse:
     properties:
       departments:
@@ -431,7 +455,7 @@ paths:
         name: authorization
         required: true
         type: string
-      - description: ER to add
+      - description: Org to add
         in: body
         name: organisation
         required: true
@@ -449,6 +473,40 @@ paths:
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: create a new organisation
+      tags:
+      - auth
+  /users:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: user to add
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.CreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: create a new user
       tags:
       - auth
   /version:
