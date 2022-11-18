@@ -258,12 +258,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }
-                    },
-                    "501": {
-                        "description": "Not Implemented",
-                        "schema": {
-                            "$ref": "#/definitions/routes.HTTPErrorResponse"
-                        }
                     }
                 }
             }
@@ -403,6 +397,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/organizations": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "create a new organisation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "ER to add",
+                        "name": "organisation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.CreateOrgRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleOrgResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/version": {
             "get": {
                 "description": "return the version",
@@ -457,6 +497,27 @@ const docTemplate = `{
                 "name": {
                     "type": "string",
                     "example": "pediatric surgery"
+                }
+            }
+        },
+        "routes.CreateOrgRequest": {
+            "type": "object",
+            "required": [
+                "contactEmail",
+                "longName"
+            ],
+            "properties": {
+                "contactEmail": {
+                    "type": "string",
+                    "example": "example@helpwave.de"
+                },
+                "longName": {
+                    "type": "string",
+                    "example": "Uniklinikum Münster"
+                },
+                "shortName": {
+                    "type": "string",
+                    "example": "UKM"
                 }
             }
         },
@@ -540,6 +601,26 @@ const docTemplate = `{
                 "utilization": {
                     "type": "integer",
                     "example": 4
+                }
+            }
+        },
+        "routes.GetSingleOrgResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "contactEmail": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "longName": {
+                    "type": "string"
+                },
+                "shortName": {
+                    "type": "string"
                 }
             }
         },

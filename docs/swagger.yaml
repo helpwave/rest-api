@@ -27,6 +27,21 @@ definitions:
     required:
     - name
     type: object
+  routes.CreateOrgRequest:
+    properties:
+      contactEmail:
+        example: example@helpwave.de
+        type: string
+      longName:
+        example: Uniklinikum Münster
+        type: string
+      shortName:
+        example: UKM
+        type: string
+    required:
+    - contactEmail
+    - longName
+    type: object
   routes.GetDepartmentsResponse:
     properties:
       departments:
@@ -82,6 +97,19 @@ definitions:
     - displayableAddress
     - location
     - name
+    type: object
+  routes.GetSingleOrgResponse:
+    properties:
+      avatarUrl:
+        type: string
+      contactEmail:
+        type: string
+      id:
+        type: string
+      longName:
+        type: string
+      shortName:
+        type: string
     type: object
   routes.HTTPError:
     properties:
@@ -301,10 +329,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
-        "501":
-          description: Not Implemented
-          schema:
-            $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: create a new emergency room
       tags:
       - emergency-rooms
@@ -397,6 +421,36 @@ paths:
           schema:
             $ref: '#/definitions/routes.HealthzResponse'
       summary: health check route
+  /organizations:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 'Bearer: <TOKEN>'
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: ER to add
+        in: body
+        name: organisation
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreateOrgRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GetSingleOrgResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: create a new organisation
+      tags:
+      - auth
   /version:
     get:
       description: return the version
