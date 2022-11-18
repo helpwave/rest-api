@@ -24,7 +24,7 @@ type GetSingleOrgResponse struct {
 // @Accept     json
 // @Produce    json
 // @Param      authorization                   header      string                     true    "Bearer: <TOKEN>"
-// @Param      organisation                    body        CreateOrgRequest  true    "ER to add"
+// @Param      organisation                    body        CreateOrgRequest           true    "ER to add"
 // @Success    200                             {object}    GetSingleOrgResponse
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /organizations                  [put]
