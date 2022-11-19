@@ -17,7 +17,7 @@ type HTTPError struct {
 }
 
 type HTTPErrorResponse struct {
-	Error HTTPError
+	Error HTTPError `json:"error"`
 }
 
 func SendError(ctx *gin.Context, status int, err error) {
