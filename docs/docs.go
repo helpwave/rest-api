@@ -406,7 +406,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "organizations"
                 ],
                 "summary": "create a new organization",
                 "parameters": [
@@ -452,7 +452,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "users"
                 ],
                 "summary": "create a new user",
                 "parameters": [

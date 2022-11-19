@@ -474,7 +474,7 @@ paths:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: create a new organization
       tags:
-      - auth
+      - organizations
   /users:
     put:
       consumes:
@@ -508,7 +508,7 @@ paths:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: create a new user
       tags:
-      - auth
+      - users
   /version:
     get:
       description: return the version
