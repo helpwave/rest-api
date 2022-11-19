@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type DepartmentBase struct {
 	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name" example:"pediatric surgery"`
+	Name string    `json:"name" gorm:"default:NULL" example:"pediatric surgery"`
 }
 
 type Department struct {
