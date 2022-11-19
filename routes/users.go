@@ -11,9 +11,9 @@ import (
 )
 
 type CreateUserRequest struct {
-	Email        string `binding:"required,email"`
-	FullName     string `binding:"required"`
-	Password     string `binding:"required,min=6,max=100"`
+	Email        string `binding:"required,email" validate:"required" example:"example@helpwave.de"`
+	FullName     string `binding:"required" validate:"required" example:"Some Name"`
+	Password     string `binding:"required,min=6,max=100" minLength:"6" maxLength:"100" validate:"required" example:"hunter2"`
 	Admin        bool
 	Organization uuid.UUID
 }
