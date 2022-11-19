@@ -24,7 +24,7 @@ type CreateUserResponse struct {
 
 // CreateUser godoc
 // @Summary    create a new user
-// @Tags       auth
+// @Tags       users
 // @Accept     json
 // @Produce    json
 // @Param      authorization    header      string                 true    "Bearer: <TOKEN>"

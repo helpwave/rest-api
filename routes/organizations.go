@@ -20,7 +20,7 @@ type GetSingleOrgResponse struct {
 
 // CreateOrganization godoc
 // @Summary    create a new organization
-// @Tags       auth
+// @Tags       organizations
 // @Accept     json
 // @Produce    json
 // @Param      authorization                   header      string                     true    "Bearer: <TOKEN>"
