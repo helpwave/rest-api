@@ -6,6 +6,8 @@
 
 The official restful application programming interface of helpwave
 
+> helpwave team members may read up on best practices and additional onboarding material in the [internal wiki](https://wiki.helpwave.de/)
+
 ## Environment
 
 A `.env.example` file is provided and can be used to customize the server.
