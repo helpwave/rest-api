@@ -457,7 +457,7 @@ paths:
         type: string
       - description: Org to add
         in: body
-        name: organisation
+        name: organization
         required: true
         schema:
           $ref: '#/definitions/routes.CreateOrgRequest'
@@ -472,7 +472,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
-      summary: create a new organisation
+      summary: create a new organization
       tags:
       - auth
   /users:

@@ -408,7 +408,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "create a new organisation",
+                "summary": "create a new organization",
                 "parameters": [
                     {
                         "type": "string",
@@ -419,7 +419,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "Org to add",
-                        "name": "organisation",
+                        "name": "organization",
                         "in": "body",
                         "required": true,
                         "schema": {

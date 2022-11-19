@@ -396,7 +396,7 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "create a new organisation",
+                "summary": "create a new organization",
                 "parameters": [
                     {
                         "type": "string",
@@ -407,7 +407,7 @@
                     },
                     {
                         "description": "Org to add",
-                        "name": "organisation",
+                        "name": "organization",
                         "in": "body",
                         "required": true,
                         "schema": {

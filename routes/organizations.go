@@ -19,12 +19,12 @@ type GetSingleOrgResponse struct {
 }
 
 // CreateOrganization godoc
-// @Summary    create a new organisation
+// @Summary    create a new organization
 // @Tags       auth
 // @Accept     json
 // @Produce    json
 // @Param      authorization                   header      string                     true    "Bearer: <TOKEN>"
-// @Param      organisation                    body        CreateOrgRequest           true    "Org to add"
+// @Param      organization                    body        CreateOrgRequest           true    "Org to add"
 // @Success    200                             {object}    GetSingleOrgResponse
 // @Failure    400                             {object}    HTTPErrorResponse
 // @Router     /organizations                  [put]
