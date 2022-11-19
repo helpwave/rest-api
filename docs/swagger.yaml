@@ -47,12 +47,15 @@ definitions:
       admin:
         type: boolean
       email:
+        example: example@helpwave.de
         type: string
       fullName:
+        example: Some Name
         type: string
       organization:
         type: string
       password:
+        example: hunter2
         maxLength: 100
         minLength: 6
         type: string

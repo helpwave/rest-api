@@ -585,10 +585,12 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "example@helpwave.de"
                 },
                 "fullName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Some Name"
                 },
                 "organization": {
                     "type": "string"
@@ -596,7 +598,8 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "maxLength": 100,
-                    "minLength": 6
+                    "minLength": 6,
+                    "example": "hunter2"
                 }
             }
         },
