@@ -106,7 +106,6 @@ type PutERRequest struct {
 // @Param      emergency-room                  body        PutERRequest          true    "ER to add"
 // @Success    200                             {object}    GetSingleERResponse
 // @Failure    400                             {object}    HTTPErrorResponse
-// @Failure    501                             {object}    HTTPErrorResponse
 // @Router     /emergency-room                             [put]
 func CreateEmergencyRoom(ctx *gin.Context) {
 	log, logCtx := logging.GetRequestLogger(ctx)

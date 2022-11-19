@@ -33,6 +33,10 @@ func setupRouter() *gin.Engine {
 	v1.GET("/healthz", routes.HealthzRoute)
 	v1.GET("/version", routes.VersionRoute(Version))
 
+	v1.PUT("/organizations", routes.AuthMiddleware(), routes.CreateOrganization)
+
+	v1.PUT("/users", routes.AuthMiddleware(), routes.CreateUser)
+
 	v1.PUT("/emergency-rooms", routes.AuthMiddleware(), routes.CreateEmergencyRoom)
 	v1.GET("/emergency-rooms", routes.GetEmergencyRooms)
 	v1.GET("/emergency-rooms/:id", routes.GetEmergencyRoomById)

@@ -246,12 +246,6 @@
                         "schema": {
                             "$ref": "#/definitions/routes.HTTPErrorResponse"
                         }
-                    },
-                    "501": {
-                        "description": "Not Implemented",
-                        "schema": {
-                            "$ref": "#/definitions/routes.HTTPErrorResponse"
-                        }
                     }
                 }
             }
@@ -391,6 +385,104 @@
                 }
             }
         },
+        "/organizations": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "organizations"
+                ],
+                "summary": "create a new organization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Org to add",
+                        "name": "organization",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.CreateOrgRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.GetSingleOrgResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "create a new user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer: \u003cTOKEN\u003e",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "user to add",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.CreateUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/version": {
             "get": {
                 "description": "return the version",
@@ -445,6 +537,65 @@
                 "name": {
                     "type": "string",
                     "example": "pediatric surgery"
+                }
+            }
+        },
+        "routes.CreateOrgRequest": {
+            "type": "object",
+            "required": [
+                "contactEmail",
+                "longName"
+            ],
+            "properties": {
+                "contactEmail": {
+                    "type": "string",
+                    "example": "example@helpwave.de"
+                },
+                "longName": {
+                    "type": "string",
+                    "example": "Uniklinikum Münster"
+                },
+                "shortName": {
+                    "type": "string",
+                    "example": "UKM"
+                }
+            }
+        },
+        "routes.CreateUserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "fullName",
+                "password"
+            ],
+            "properties": {
+                "admin": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "example@helpwave.de"
+                },
+                "fullName": {
+                    "type": "string",
+                    "example": "Some Name"
+                },
+                "organization": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 6,
+                    "example": "hunter2"
+                }
+            }
+        },
+        "routes.CreateUserResponse": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
                 }
             }
         },
@@ -528,6 +679,26 @@
                 "utilization": {
                     "type": "integer",
                     "example": 4
+                }
+            }
+        },
+        "routes.GetSingleOrgResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "contactEmail": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "longName": {
+                    "type": "string"
+                },
+                "shortName": {
+                    "type": "string"
                 }
             }
         },
