@@ -10,9 +10,9 @@ import (
 )
 
 type GetSingleERResponse struct {
-	ID uuid.UUID
+	ID uuid.UUID `json:"id"`
 	models.EmergencyRoomBase
-	Departments []models.DepartmentBase
+	Departments []models.DepartmentBase `json:"departments"`
 }
 
 // GetEmergencyRoomById godoc
@@ -232,5 +232,5 @@ func DeleteEmergencyRoom(ctx *gin.Context) {
 
 type GetMultipleERsResponse struct {
 	PaginatedResponse
-	EmergencyRooms []uuid.UUID
+	EmergencyRooms []uuid.UUID `json:"emergencyRooms"`
 }

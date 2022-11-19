@@ -19,7 +19,7 @@ type CreateUserRequest struct {
 }
 
 type CreateUserResponse struct {
-	UserID uuid.UUID
+	UserID uuid.UUID `json:"userID"`
 }
 
 // CreateUser godoc

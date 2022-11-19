@@ -12,7 +12,7 @@ import (
 
 type GetDepartmentsResponse struct {
 	PaginatedResponse
-	Departments []models.DepartmentBase
+	Departments []models.DepartmentBase `json:"departments"`
 }
 
 // GetDepartments godoc

@@ -9,8 +9,8 @@ import (
 // Thank you mkopriv (https://stackoverflow.com/a/68521736)
 
 type Point struct {
-	Lat  float64 `binding:"required" example:"51.9893434"`
-	Long float64 `binding:"required" example:"7.62613583"`
+	Lat  float64 `json:"lat" binding:"required" example:"51.9893434"`
+	Long float64 `json:"long" binding:"required" example:"7.62613583"`
 }
 
 // Value converts a Point into a []byte for the database driver to consume

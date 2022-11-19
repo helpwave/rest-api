@@ -7,10 +7,10 @@ import (
 )
 
 type PaginatedResponse struct {
-	Page      int
-	PageSize  int
-	TotalSize int64
-	LastPage  bool
+	Page      int   `json:"page"`
+	PageSize  int   `json:"pageSize"`
+	TotalSize int64 `json:"totalSize"`
+	LastPage  bool  `json:"lastPage"`
 }
 
 func Paginate(pagination PaginatedResponse) func(db *gorm.DB) *gorm.DB {

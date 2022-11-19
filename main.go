@@ -16,6 +16,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// Version is set at compile time
 var Version string
 
 func setupRouter() *gin.Engine {
