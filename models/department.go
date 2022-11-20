@@ -3,8 +3,8 @@ package models
 import "github.com/google/uuid"
 
 type DepartmentBase struct {
-	ID   uuid.UUID
-	Name string `example:"pediatric surgery"`
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name" example:"pediatric surgery"`
 }
 
 type Department struct {

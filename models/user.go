@@ -5,10 +5,10 @@ import "github.com/google/uuid"
 const Admin = "admin"
 
 type UserBase struct {
-	ID        uuid.UUID
-	Email     string
-	FullName  string `gorm:"default:NULL"`
-	AvatarUrl string `gorm:"default:NULL"`
+	ID        uuid.UUID `json:"id"`
+	Email     string    `json:"email"`
+	FullName  string    `json:"fullName" gorm:"default:NULL"`
+	AvatarUrl string    `json:"avatarUrl" gorm:"default:NULL"`
 }
 
 type User struct {
