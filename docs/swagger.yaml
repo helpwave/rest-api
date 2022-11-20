@@ -1,4 +1,13 @@
 definitions:
+  auth.UserOrOrgClaim:
+    properties:
+      id:
+        example: d45ddfc0-1fc3-4fa7-95e9-edd7d134103a
+        type: string
+      role:
+        example: user
+        type: string
+    type: object
   models.DepartmentBase:
     properties:
       id:
@@ -157,6 +166,27 @@ definitions:
       server:
         type: string
     type: object
+  routes.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  routes.LoginResponse:
+    properties:
+      accessToken:
+        $ref: '#/definitions/routes.TokenResponse'
+      organization:
+        $ref: '#/definitions/auth.UserOrOrgClaim'
+      refreshToken:
+        $ref: '#/definitions/routes.TokenResponse'
+      user:
+        $ref: '#/definitions/routes.UserResponse'
+    type: object
   routes.PutERRequest:
     properties:
       departments:
@@ -189,15 +219,68 @@ definitions:
         example: pediatric surgery
         type: string
     type: object
+  routes.TokenResponse:
+    properties:
+      exp:
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+        type: string
+    type: object
   routes.UpdateDepartmentRequest:
     properties:
       name:
         example: pediatric surgery
         type: string
     type: object
+  routes.UserResponse:
+    properties:
+      avatarUrl:
+        type: string
+      email:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: string
+      role:
+        example: user
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /auth/login:
+    post:
+      parameters:
+      - description: User Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/routes.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: log in using email and password - get refresh-token and initial access-token
+      tags:
+      - auth
   /departments:
     get:
       parameters:

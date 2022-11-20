@@ -70,6 +70,16 @@ This project supports Git Hooks. Primarily to lint the commit message. To use ou
 make githooks
 ```
 
+### JWT
+
+During Development the server will fall back to a default key pair, to generate a keypair for production use you can leverage [openssl](https://www.openssl.org/):
+
+```bash
+openssl ecparam -name prime256v1 -genkey -noout -out jwt-private.pem &&
+openssl ec -in jwt-private.pem -pubout -out jwt-public.pem
+```
+
+
 ### Gin
 
 We use [gin][gin] for routing.

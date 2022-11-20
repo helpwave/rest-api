@@ -13,6 +13,9 @@ services:
       POSTGRES_USER: helpwave
       POSTGRES_PASSWORD: helpwave
       POSTGRES_DB: helpwave
+    volumes:
+        - "./jwt-private.pem:/app/jwt-private.pem:ro"
+        - "./jwt-public.pem:/app/jwt-public.pem:ro"
     healthcheck:
       test: curl --fail http://localhost/v1/healthz || exit 1
       interval: 60s
