@@ -6,19 +6,19 @@ const Admin = "admin"
 
 type UserBase struct {
 	ID        uuid.UUID `json:"id"`
-	Email     string    `json:"email"`
+	Email     string    `json:"email" gorm:"default:NULL"`
 	FullName  string    `json:"fullName" gorm:"default:NULL"`
 	AvatarUrl string    `json:"avatarUrl" gorm:"default:NULL"`
 }
 
 type User struct {
 	UserBase
-	PwBcrypt      string
+	PwBcrypt      string `gorm:"default:NULL"`
 	GlobalRoles   []GlobalRole
 	Organizations []Organization `gorm:"many2many:organizations_have_users"`
 }
 
 type GlobalRole struct {
 	UserID uuid.UUID
-	Role   string
+	Role   string `gorm:"default:NULL"`
 }
