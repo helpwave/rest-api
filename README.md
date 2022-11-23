@@ -63,6 +63,13 @@ will produce a single binary in the root called "rest-api".
 
 > Note: Release builds should be versioned, please compile them using `go build -ldflags="-X main.Version=<version>" .`
 
+### Git Hooks
+
+This project supports Git Hooks. Primarily to lint the commit message. To use our hooks, execute the following.
+```bash
+make githooks
+```
+
 ### Gin
 
 We use [gin][gin] for routing.
