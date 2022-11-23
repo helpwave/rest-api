@@ -12,5 +12,5 @@ type OrganizationBase struct {
 
 type Organization struct {
 	OrganizationBase
-	Users []User `gorm:"many2many:organizations_have_users"`
+	Users []User
 }
