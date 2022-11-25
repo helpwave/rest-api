@@ -1,6 +1,7 @@
 package main
 
 import (
+	"rest-api/auth"
 	"rest-api/docs"
 	"rest-api/logging"
 	"rest-api/models"
@@ -37,6 +38,8 @@ func setupRouter() *gin.Engine {
 	v1.PUT("/organizations", routes.AuthMiddleware(), routes.CreateOrganization)
 
 	v1.PUT("/users", routes.AuthMiddleware(), routes.CreateUser)
+
+	v1.POST("/auth/login", routes.Login)
 
 	v1.PUT("/emergency-rooms", routes.AuthMiddleware(), routes.CreateEmergencyRoom)
 	v1.GET("/emergency-rooms", routes.GetEmergencyRooms)
@@ -78,7 +81,7 @@ func main() {
 		Version,
 	)
 
-	if len(Version) == 0 && GinMode != "development" {
+	if len(Version) == 0 && GinMode == gin.ReleaseMode {
 		log.Warn().Msg("Version is empty in production build! Recompile using ldflag '-X main.Version=<version>'")
 	}
 
@@ -97,6 +100,8 @@ func main() {
 	gin.SetMode(util.GetEnvOr("GIN_MODE", "debug"))
 
 	setSwaggerInfo()
+
+	auth.SetupTokenSecrets(GinMode, util.ReadFileOrEmpty("jwt-private.pem"), util.ReadFileOrEmpty("jwt-public.pem"))
 
 	router := setupRouter()
 

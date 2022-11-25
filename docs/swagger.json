@@ -4,6 +4,54 @@
         "contact": {}
     },
     "paths": {
+        "/auth/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "log in using email and password - get refresh-token and initial access-token",
+                "parameters": [
+                    {
+                        "description": "User Credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/routes.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/routes.HTTPErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/departments": {
             "get": {
                 "produces": [
@@ -499,6 +547,19 @@
         }
     },
     "definitions": {
+        "auth.UserOrOrgClaim": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "d45ddfc0-1fc3-4fa7-95e9-edd7d134103a"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "user"
+                }
+            }
+        },
         "models.DepartmentBase": {
             "type": "object",
             "properties": {
@@ -731,6 +792,38 @@
                 }
             }
         },
+        "routes.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "routes.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "$ref": "#/definitions/routes.TokenResponse"
+                },
+                "organization": {
+                    "$ref": "#/definitions/auth.UserOrOrgClaim"
+                },
+                "refreshToken": {
+                    "$ref": "#/definitions/routes.TokenResponse"
+                },
+                "user": {
+                    "$ref": "#/definitions/routes.UserResponse"
+                }
+            }
+        },
         "routes.PutERRequest": {
             "type": "object",
             "required": [
@@ -777,12 +870,45 @@
                 }
             }
         },
+        "routes.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "exp": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
+                }
+            }
+        },
         "routes.UpdateDepartmentRequest": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string",
                     "example": "pediatric surgery"
+                }
+            }
+        },
+        "routes.UserResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "fullName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "user"
                 }
             }
         }
