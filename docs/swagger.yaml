@@ -211,6 +211,18 @@ definitions:
     - location
     - name
     type: object
+  routes.RefreshRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  routes.RefreshResponse:
+    properties:
+      accessToken:
+        $ref: '#/definitions/routes.TokenResponse'
+    type: object
   routes.SingleDepartmentResponse:
     properties:
       id:
@@ -279,6 +291,37 @@ paths:
           schema:
             $ref: '#/definitions/routes.HTTPErrorResponse'
       summary: log in using email and password - get refresh-token and initial access-token
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      parameters:
+      - description: The refresh-token from the login
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/routes.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.RefreshResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/routes.HTTPErrorResponse'
+      summary: exchange the refresh-token for an access-token
       tags:
       - auth
   /departments:
