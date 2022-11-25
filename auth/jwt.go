@@ -128,8 +128,7 @@ func IssueRefreshToken(logCtx context.Context, user UserOrOrgClaim, org UserOrOr
 	return signedString, claims, nil
 }
 
-// validateRefreshToken
-func _(tokenString string) (*RefreshTokenClaim, error) {
+func ValidateRefreshToken(tokenString string) (*RefreshTokenClaim, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &RefreshTokenClaim{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

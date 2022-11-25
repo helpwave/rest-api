@@ -194,3 +194,56 @@ func Login(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+type RefreshRequest struct {
+	RefreshToken string `binding:"required"`
+}
+
+type RefreshResponse struct {
+	AccessToken TokenResponse `json:"accessToken"`
+}
+
+// Refresh godoc
+// @Summary		exchange the refresh-token for an access-token
+// @Tags		auth
+// @Produce		json
+// @Param		refreshToken	body		RefreshRequest		true	"The refresh-token from the login"
+// @Success		200				{object}	RefreshResponse
+// @Failure		400				{object}	HTTPErrorResponse
+// @Failure		401				{object}	HTTPErrorResponse
+// @Failure		500				{object}	HTTPErrorResponse
+// @Router		/auth/refresh	[post]
+func Refresh(ctx *gin.Context) {
+	log, logCtx := logging.GetRequestLogger(ctx)
+
+	body := RefreshRequest{}
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		log.Warn().Err(err).Msg("validation failed")
+		SendError(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	refreshTokenClaim, err := auth.ValidateRefreshToken(body.RefreshToken)
+	if err != nil {
+		msg := "validation of refreshToken failed"
+		log.Warn().Err(err).Msg(msg)
+		SendError(ctx, http.StatusUnauthorized, errors.New(msg))
+		return
+	}
+
+	accessTokenString, accessTokenClaim, err := auth.IssueAccessToken(logCtx, refreshTokenClaim.User, refreshTokenClaim.Organization, refreshTokenClaim.ID)
+	if err != nil {
+		log.Error().Err(err).Str("refresh_claim", util.Formatted(refreshTokenClaim)).Msg("failed to generate access token")
+		SendError(ctx, http.StatusInternalServerError, errors.New("error generating token"))
+		return
+	}
+
+	response := RefreshResponse{
+		AccessToken: TokenResponse{
+			Token: accessTokenString,
+			Exp:   accessTokenClaim.Exp,
+		},
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
