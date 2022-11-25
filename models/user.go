@@ -14,8 +14,8 @@ type UserBase struct {
 
 type User struct {
 	UserBase
-	PwBcrypt     string       `gorm:"default:NULL"`
-	Organization Organization `gorm:"default:NULL"`
+	PwBcrypt     string `gorm:"default:NULL"`
+	Organization Organization
 	GlobalRoles  []GlobalRole
 }
 
