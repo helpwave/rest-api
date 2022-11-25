@@ -66,37 +66,17 @@ func CreateUser(ctx *gin.Context) {
 	//
 	user := models.User{
 		UserBase: models.UserBase{
-			Email:    body.Email,
-			FullName: body.FullName,
+			Email:          body.Email,
+			FullName:       body.FullName,
+			OrganizationID: body.Organization,
 		},
 		PwBcrypt: string(hashBytes),
 	}
 
-	if body.Organization != uuid.Nil {
-		org := models.Organization{
-			OrganizationBase: models.OrganizationBase{
-				ID: body.Organization,
-			},
-		}
-		user.Organizations = append(user.Organizations, org)
-	}
-
 	db := models.GetDB(logCtx)
-	db = db.Omit("Organizations.*") // do not attempt to create new org
-	tx := db.Begin()
-	tx.Create(&user)
+	res := db.Create(&user)
 
-	if body.Admin {
-		globalRole := models.GlobalRole{
-			UserID: user.ID,
-			Role:   models.Admin,
-		}
-		tx.Create(globalRole)
-	}
-
-	res := tx.Commit()
 	if err := res.Error; err != nil {
-		// TODO: improve error handling, now we only get the "commit unexpectedly resulted in rollback" error
 		HandleDBError(ctx, logCtx, err)
 		return
 	}
