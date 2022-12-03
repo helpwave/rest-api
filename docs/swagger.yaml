@@ -255,6 +255,8 @@ definitions:
         type: string
       id:
         type: string
+      organizationID:
+        type: string
       role:
         example: user
         type: string

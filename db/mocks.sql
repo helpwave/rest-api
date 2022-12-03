@@ -13,13 +13,11 @@ INSERT INTO users (email, pw_bcrypt, full_name, avatar_url) values ('jkilpatrick
 
 INSERT INTO global_roles (role, user_id) SELECT 'admin', u.id FROM users AS u WHERE u.email = 'admin@helpwave.de';
 
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'admin@helpwave.de' AND o.contact_email = 'example@helpwave.de';
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'admin@helpwave.de' AND o.contact_email = 'example2@helpwave.de';
-
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'vfitzhenry1@ycombinator.com' AND o.contact_email = 'example@helpwave.de';
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'escottini2@google.cn' AND o.contact_email = 'example@helpwave.de';
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'kcowpland4@devhub.com' AND o.contact_email = 'example2@helpwave.de';
-INSERT INTO organizations_have_users SELECT o.id AS organization_id, u.id AS user_id FROM organizations AS o, users AS u WHERE u.email = 'jkilpatrick5@godaddy.com' AND o.contact_email = 'example2@helpwave.de';
+UPDATE users AS u SET organization_id = o.id FROM organizations AS o WHERE u.email = 'admin@helpwave.de' AND o.contact_email = 'example@helpwave.de';
+UPDATE users AS u SET organization_id = o.id FROM organizations AS o WHERE u.email = 'vfitzhenry1@ycombinator.com' AND o.contact_email = 'example@helpwave.de';
+UPDATE users AS u SET organization_id = o.id FROM organizations AS o WHERE u.email = 'escottini2@google.cn' AND o.contact_email = 'example@helpwave.de';
+UPDATE users AS u SET organization_id = o.id FROM organizations AS o WHERE u.email = 'kcowpland4@devhub.com' AND o.contact_email = 'example2@helpwave.de';
+UPDATE users AS u SET organization_id = o.id FROM organizations AS o WHERE u.email = 'jkilpatrick5@godaddy.com' AND o.contact_email = 'example2@helpwave.de';
 
 -- Rooms
 INSERT INTO emergency_rooms (name, location, displayable_address, is_open, organization_id) VALUES ('Mock Hospital One', point(34.238555, 117.196805), 'Mock Street 5, 123456 Cityname', true, '960467b1-044b-41c2-9904-a4d6c2d01b77');

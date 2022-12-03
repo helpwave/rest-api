@@ -985,6 +985,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "organizationID": {
+                    "type": "string"
+                },
                 "role": {
                     "type": "string",
                     "example": "user"

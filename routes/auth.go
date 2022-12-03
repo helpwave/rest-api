@@ -112,7 +112,6 @@ func Login(ctx *gin.Context) {
 
 	db := models.GetDB(logCtx)
 	tx := db.
-		Preload("Organizations").
 		Preload("GlobalRoles").
 		Where(&user).
 		First(&user)
@@ -138,28 +137,16 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	if len(user.Organizations) == 0 {
-		log.
-			Warn().
-			Str("user_id", user.ID.String()).
-			Msg("user does not belong to any organizations")
-		SendError(ctx, http.StatusBadRequest, errors.New("user is not authorized for any organizations"))
-		return
-	} else if len(user.Organizations) > 1 {
-		log.
-			Warn().
-			Str("user_id", user.ID.String()).
-			Msg("user is in more than one Organization")
-	}
+	globalRole := getGlobalRole(&user)
 
 	organizationClaim := auth.UserOrOrgClaim{
-		ID:   user.Organizations[0].ID,
+		ID:   user.OrganizationID, // this may be uuid.Nil
 		Role: "user",
 	}
 
 	userResponse := UserResponse{
 		UserBase: user.UserBase,
-		Role:     getGlobalRole(&user),
+		Role:     globalRole,
 	}
 
 	userClaim := userResponse.toClaim()
